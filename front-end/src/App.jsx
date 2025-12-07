@@ -26,33 +26,6 @@ function App() {
   const [textoMensagem, setTextoMensagem] = useState(null)
   const [textoMensagemVisivel, setTextoMensagemVisivel] = useState(false)
 
-  useEffect(() => {
-    if (!carregou) {
-      const etiquetasArmazenadas = JSON.parse(localStorage.getItem("etiquetas"));
-      const historiasArmazenadas = JSON.parse(localStorage.getItem("historias"));
-      if (etiquetasArmazenadas) {
-        setEtiquetas(etiquetasArmazenadas);
-        if (historiasArmazenadas) {
-          setHistorias(historiasArmazenadas);
-        }
-      }
-      setCarregou(true);
-    }
-  }, [carregou])
-
-
-  useEffect(() => {
-    if (carregou) {
-      localStorage.setItem("etiquetas", JSON.stringify(etiquetas))
-    }
-  }, [etiquetas, carregou])
-
-  useEffect(() => {
-    if (carregou) {
-      localStorage.setItem("historias", JSON.stringify(historias))
-    }
-  }, [historias, carregou])
-
   const handleShowEtiquetaForm = (id = -1) => {
     setIdEtiqueta(id)
     document.querySelector("#formEtiqueta").style.display = "flex"
