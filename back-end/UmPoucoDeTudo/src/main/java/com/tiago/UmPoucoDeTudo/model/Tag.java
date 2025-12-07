@@ -34,7 +34,7 @@ public class Tag {
     @Column(nullable = false)
     private LocalDate created_at;
 
-    @OneToMany(mappedBy = "story", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tag", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Story> stories;
 
 }

@@ -1,5 +1,7 @@
 package com.tiago.UmPoucoDeTudo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +32,8 @@ public class Story {
     private String story;
 
     @ManyToOne
-    @JoinColumn(name = "tag_id")
+    @JoinColumn(name = "tag_id", nullable = false)
+    @JsonIgnoreProperties("stories")
     private Tag tag;
 
 }
