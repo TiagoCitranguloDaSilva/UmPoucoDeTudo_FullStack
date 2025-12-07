@@ -1,5 +1,7 @@
 package com.tiago.UmPoucoDeTudo.model;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -30,6 +32,9 @@ public class Story {
 
     @Column(nullable = false)
     private String story;
+
+    @Column(nullable = false)
+    private LocalDate created_at;
 
     @ManyToOne
     @JoinColumn(name = "tag_id", nullable = false)
