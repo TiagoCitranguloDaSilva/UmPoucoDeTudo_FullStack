@@ -1,0 +1,267 @@
+
+
+#root{
+    display: flex;
+    flex-direction: column;
+    gap: 1.8em;
+    align-items: center;
+    color: rgb(59, 59, 59);
+    max-width: 100svw;
+}
+
+h1{
+    margin: 1.6em;
+    font-size: 2.1rem;
+    font-style: italic;
+}
+
+
+#etiquetas, #historias{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    user-select: none;
+}
+
+#historias{
+    box-shadow: none;
+}
+
+#etiquetas{
+    max-width: 100svw;
+    width: 40em;
+}
+
+#historias{
+    max-width: 100svw;
+    width: 60em;
+}
+
+#etiquetasHeader, .historiaHeader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #f5f8ff;
+    padding: .8em;
+    cursor: pointer;
+    position: relative;
+    border-radius: 6px;
+    max-width: 100%;
+}
+
+.historiaContainer{
+    display: flex;
+    flex-direction: column;
+    gap: .2em;
+}
+
+#etiquetasHeader .icone, .historiaHeader .icone{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 2.1em;
+    height: 2.1em;
+    position: absolute;
+    right: 1em;
+    background-image: url("./assets/uncollapseButton.png");
+    transition: transform .2s;
+}
+
+.iconeCollapse .icone{
+    transform: rotate(180deg);
+}
+
+#etiquetas .iconeCollapse{
+    border-bottom: 2px solid #e2e2e2;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+:disabled{
+    cursor: default !important;
+}
+
+#etiquetasContainer, .historiasContainer{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.6em;
+    padding: 1em;
+    transition: max-height .3s ease, padding .3s ease, opacity .3s ease;
+}
+
+#etiquetasContainer{
+    background-color: #f5f8ff;
+    border-radius: 0 0 5px 5px;
+}
+
+.etiquetasContainer.collapsed{
+    opacity: 0;
+}
+
+.etiqueta, .historia{
+    border: 3px solid #7b99e0;
+    padding: .6em;
+    cursor: pointer;
+    transition: transform .3s;
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, .08);
+}
+
+.historia{
+    width: 9em;
+    height: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: transform .3s, opacity .3s;
+}
+
+.etiqueta:hover, .historia:hover{
+    transform: scale(1.05);
+}
+
+.headerContainer{
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+}
+
+.headerContainer button{
+    padding: .5em;
+    border-radius: 4px;
+    border: 3px solid #7b99e0;
+    cursor: pointer;
+    transition: transform .3s;
+    background-color: #829ee0;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.headerContainer button:hover{
+    transform: scale(1.05);
+}
+
+.historiasList{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 1em;
+    transition: max-height .3s ease, padding .3s ease, opacity .3s ease;
+}
+
+.historiasList.collapsed, #etiquetasContainer.collapsed{
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.historiasList.collapsed .historia{
+    opacity: 0;
+}
+
+.naoHaContainer .historiasList{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.historiasList .msgNaoHa{
+    background-color: #d3d3d3;
+    padding: 1em;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, .12);
+}
+
+#graficoButton{
+    position: fixed;
+    right: 1em;
+    top: 1em;
+    width: 4em;
+    height: 4em;
+    border: 3px solid #5252da;
+    background-color: #6060ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: transform .3s;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#graficoButton:hover{
+    transform: scale(1.05);
+}
+
+#graficoButton img{
+    width: 95%;
+    height: 95%;
+    padding: .2em;
+}
+
+.msgConfirmacao{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100svw;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+    backdrop-filter: blur(5px);
+}
+
+.msgConfirmacao form{
+    width: 25em;
+    padding: 2em 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #91b2ff;
+    border: 5px solid #7793d2;
+    gap: 1em;
+}
+
+.msgConfirmacao form .buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.msgConfirmacao input[type="submit"]:hover, .msgConfirmacao button:hover{
+    transform: scale(1.05);
+}
+
+.msgConfirmacao p{
+    font-size: 1.5rem !important;
+    text-align: center;
+    color: white;
+}
+
+
+@media (width < 600px) {
+    #root{
+        padding: 0;
+    }
+
+    .historiaHeader, #etiquetasHeader{
+        border-radius: 0;
+    }
+
+    h1{
+        margin-top: 2.5em;
+    }
+}

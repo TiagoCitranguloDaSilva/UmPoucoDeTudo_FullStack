@@ -1,0 +1,116 @@
+
+
+#formEtiqueta{
+    position: fixed;
+    backdrop-filter: blur(2px);
+    width: 100svw;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    z-index: 4;
+    top: 0;
+}
+
+#formEtiqueta h2{
+    text-align: center;
+    pointer-events: none;
+}
+
+#formPrincipalEtiqueta{
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr max-content 1fr;
+    align-items: center;
+    justify-content: center;
+    gap: 2em;
+    background-color: #91b2ff;
+    width: max-content;
+    max-width: 100%;
+    padding: 5em;
+    font-size: 1.3rem;
+    border: 5px solid #6c94f1;
+    border-radius: 5px;
+    
+}
+
+.hidden{
+    display: none !important;
+}
+
+#formEtiqueta form p{
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+}
+
+#formEtiqueta form p input{
+    height: 2em;
+    font-size: 1.2rem;
+    border-radius: 6px;
+    padding: 3px;
+}
+
+
+#formEtiqueta form input[type="submit"]:hover, #formEtiqueta button:hover{
+    transform: scale(1.05);
+}
+
+#fecharFormulario{
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    font-size: 1rem;
+    transition: transform .3s;
+    cursor: pointer;
+}
+
+#fecharFormulario:hover{
+    transform: scale(1.05);
+}
+
+.botoes{
+    display: flex;
+    gap: 1em;
+}
+
+.botoes *{
+    width: 5em;
+    height: 2.5em;
+    margin: auto;
+    font-size: 1.2em;
+    padding: .2em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform .3s;
+    background-color: #829ee0;
+    color: white;
+    border: 3px solid #6488dd;
+}
+
+.buttonApagar{
+    display: none;
+}
+
+#dataEtiqueta{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding-right: .5em;
+    padding-bottom: .5em;
+}
+
+
+
+@media (width < 600px){
+    #formEtiqueta form{
+        height: 100svh;
+        width: 100svw;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}

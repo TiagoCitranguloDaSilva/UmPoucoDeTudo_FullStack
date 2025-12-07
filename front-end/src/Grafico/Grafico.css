@@ -1,0 +1,45 @@
+
+#grafico{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #91b2ff;
+    width: 100svw;
+    min-height: 100svh;
+    z-index: 1;
+    grid-template-rows: max-content 1fr;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+
+}   
+
+#grafico h1{
+    text-align: center;
+}
+
+#grafico > div{
+    width: 80%;
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+canvas{
+    display: block;
+}
+
+#grafico.hidden{
+    display: none;
+}
+
+#grafico:not(.hidden){
+    display: grid;
+}
+
+#msgNaoHaDados h2{
+    text-align: center;
+}
