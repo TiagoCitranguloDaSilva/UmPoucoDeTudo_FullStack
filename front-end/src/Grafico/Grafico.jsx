@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto';
 import "./Grafico.css"
 
-function Grafico({ etiquetas, historias, visivel }) {
+function Grafico({ visivel }) {
 
     const canvasRef = useRef(null)
     const [chart, setChart] = useState()
@@ -14,10 +14,15 @@ function Grafico({ etiquetas, historias, visivel }) {
         }
     )
 
+    const [etiquetas, setEtiquetas] = useState([])
+    const [historias, setHistorias] = useState([])
+
     useEffect(() => {
         if (visivel == false || !canvasRef.current) {
             return
         }
+
+        updateAll()
 
         const ctx = canvasRef.current.getContext("2d")
 
@@ -46,6 +51,10 @@ function Grafico({ etiquetas, historias, visivel }) {
     }, [visivel])
 
     useEffect(() => {
+        updateAll()
+    }, [])
+
+    useEffect(() => {
 
         if (etiquetas.length == 0) {
             document.querySelector("#msgNaoHaDados").style.display = "flex"
@@ -59,7 +68,7 @@ function Grafico({ etiquetas, historias, visivel }) {
         } else {
             let achou = false
             for (let c = 0; c < etiquetas.length; c++) {
-                if (historias[c].length >= 1) {
+                if (historias[etiquetas[c].id]?.length >= 1) {
                     achou = true
                 }
             }
@@ -89,13 +98,14 @@ function Grafico({ etiquetas, historias, visivel }) {
         }
     }, [data])
 
-    function atualizarData(novasEtiquetas, novasHistorias) {
+    function atualizarData(novasEtiquetas) {
+
         setData({
-            labels: novasEtiquetas.map((etiqueta, key) => etiqueta[0]),
+            labels: novasEtiquetas.map((etiqueta) => etiqueta.name),
             datasets: [
                 {
                     label: "Histórias",
-                    data: novasEtiquetas.map((etiqueta, key) => historias[key].length),
+                    data: novasEtiquetas.map((etiqueta) => historias[etiqueta.id]?.length),
                     backgroundColor: aleatorizarCores(novasEtiquetas.length)
                 }
             ]
@@ -120,6 +130,38 @@ function Grafico({ etiquetas, historias, visivel }) {
         }
         return cores
 
+    }
+
+    function updateAll(){
+        fetch("http://localhost:8080/tags/getAll")
+            .then(response => {
+                if (!response.ok) {
+                    console.log("Erro ao pegar as etiquetas")
+                }
+                return response.json()
+            })
+            .then(data => {
+                setEtiquetas(data)
+            })
+
+        fetch("http://localhost:8080/stories/getAll")
+            .then(response => {
+                if (!response.ok) {
+                    console.log("Erro ao pegar as histórias")
+                }
+                return response.json()
+            })
+            .then(data => {
+                const agrupado = data.reduce((tag, historia) => {
+                    const tagId = historia.tag.id;
+                    if (!tag[tagId]) {
+                        tag[tagId] = [];
+                    }
+                    tag[tagId].push(historia);
+                    return tag;
+                }, {});
+                setHistorias(agrupado)
+            })
     }
 
 

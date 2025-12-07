@@ -4,9 +4,7 @@ import React, { useState, useEffect } from 'react'
 import EtiquetaForm from "./EtiquetaForm/EtiquetaForm"
 import HistoriaForm from "./HistoriaForm/HistoriaForm"
 import Grafico from "./grafico/Grafico.jsx"
-import Configuration from "./Configuration/Configuration.jsx"
 import botaoGrafico from './assets/botaoGrafico.png'
-import botaoConfig from './assets/botaoConfig.png'
 import Mensagem from './Mensagem/Mensagem.jsx'
 
 function App() {
@@ -14,17 +12,17 @@ function App() {
   const [etiquetas, setEtiquetas] = useState([])
   const [idEtiqueta, setIdEtiqueta] = useState(-1)
 
-  const [carregou, setCarregou] = useState(false)
-
   const [historias, setHistorias] = useState([])
-  const [historiaSelecionada, setHistoriaSelecionada] = useState(null);
   const [idHistoria, setIdHistoria] = useState(-1)
-  const [idEscolhaOriginal, setIdEscolhaOriginal] = useState(-1)
 
   const [graficoVisivel, setGraficoVisivel] = useState(false)
 
   const [textoMensagem, setTextoMensagem] = useState(null)
   const [textoMensagemVisivel, setTextoMensagemVisivel] = useState(false)
+
+  useEffect(() => {
+    updateAll()
+  }, [])
 
   const handleShowEtiquetaForm = (id = -1) => {
     setIdEtiqueta(id)
@@ -33,96 +31,31 @@ function App() {
     document.querySelector("#nomeEtiqueta").focus()
   }
 
-  const handleShowHistoriaForm = (id = -1, idEtiqueta = -1) => {
-    setHistoriaSelecionada(null)
+  const handleShowHistoriaForm = (id = -1) => {
     setIdHistoria(-1)
     if (id != -1) {
-      setHistoriaSelecionada([historias[idEtiqueta][id], idEtiqueta])
       setIdHistoria(id)
-      setIdEscolhaOriginal(idEtiqueta)
-      
     }
     document.querySelector("#formHistoria").style.display = "flex"
     document.body.style.overflowY = "hidden"
     document.querySelector("#tituloHistoria").focus()
   }
 
-  const handleEtiqueta = (valor) => {
-    if (idEtiqueta != -1) {
-      let temp = [...etiquetas]
-      temp[idEtiqueta][0] = valor
-      setEtiquetas([...temp])
-    } else {
-      let time = new Date()
-      let anoAtual = time.getFullYear()
-      let mesAtual = time.getMonth() + 1
-      let diaAtual = time.getDate()
-      let horaAtual = time.getHours()
-      let minutoAtual = time.getMinutes()
-      let segundoAtual = time.getSeconds()
-      let tempEtiqueta = [valor, `${anoAtual}/${mesAtual}/${diaAtual} ${horaAtual}:${minutoAtual}:${segundoAtual}`]
-      setEtiquetas([...etiquetas, tempEtiqueta])
-      let tempHistorias = [...historias]
-      tempHistorias.push([])
-      setHistorias(tempHistorias)
-    }
+  const handleEtiqueta = (msg) => {
 
-    setIdEtiqueta(-1)
-    
-    mostrarMensagem("Etiqueta salva!")
+    updateAll()
+
+    mostrarMensagem(msg)
 
   }
 
-  const handleHistoria = (titulo, historia, escolha) => {
-    let tempArrayHistoria = null
+  const handleHistoria = (msg) => {
 
-    if (historiaSelecionada != null) {
-      tempArrayHistoria = [...historias]
-      if (escolha == idEscolhaOriginal && escolha != -1) {
-        tempArrayHistoria[escolha][idHistoria][0] = titulo
-        tempArrayHistoria[escolha][idHistoria][1] = historia
-      } else if (escolha != -1 && escolha != idEscolhaOriginal) {
-        tempArrayHistoria[escolha].push([titulo, historia])
-        tempArrayHistoria[idEscolhaOriginal].splice(idHistoria, 1)
-      }
-    } else {
-      tempArrayHistoria = [...historias]
-      let time = new Date()
-      let anoAtual = time.getFullYear()
-      let mesAtual = time.getMonth() + 1
-      let diaAtual = time.getDate()
-      let horaAtual = time.getHours()
-      let minutoAtual = time.getMinutes()
-      let segundoAtual = time.getSeconds()
-      tempArrayHistoria[escolha].push([titulo, historia, `${anoAtual}/${mesAtual}/${diaAtual} ${horaAtual}:${minutoAtual}:${segundoAtual}`])
-    }
-    setHistorias(tempArrayHistoria)
     setIdHistoria(-1)
-    setIdEscolhaOriginal(-1)
 
-    mostrarMensagem("História salva!")
+    mostrarMensagem(msg)
 
-  }
-
-  const handleApagarEtiqueta = () => {
-    let etiquetasAtualizadas = etiquetas.filter((_, index) => index !== idEtiqueta);
-    let historiasAtualizadas = historias.filter((_, index) => index != idEtiqueta)
-    setEtiquetas(etiquetasAtualizadas)
-    setHistorias(historiasAtualizadas)
-    setIdEtiqueta(-1)
-
-    mostrarMensagem("Etiqueta apagada!")
-
-  }
-
-  const handleApagarHistoria = () => {
-    let tempHistoria = [...historias]
-    tempHistoria[idEscolhaOriginal] = tempHistoria[idEscolhaOriginal].filter((_, index) => index !== idHistoria)
-    setHistorias(tempHistoria)
-    setIdHistoria(-1)
-    setIdEscolhaOriginal(-1)
-
-    mostrarMensagem("História apagada!")
+    updateAll()
 
   }
 
@@ -177,13 +110,13 @@ function App() {
       document.querySelector("#config").classList.remove("hidden")
     } else {
       document.querySelector("#config").classList.add("hidden")
-      if(!document.querySelector("#inputFileContainer").classList.contains("hidden")){
-          document.querySelector("#inputFileContainer").classList.add("hidden")
+      if (!document.querySelector("#inputFileContainer").classList.contains("hidden")) {
+        document.querySelector("#inputFileContainer").classList.add("hidden")
       }
     }
   }
 
-  function mostrarMensagem(texto){
+  function mostrarMensagem(texto) {
 
     setTextoMensagem(texto)
     setTextoMensagemVisivel(true)
@@ -191,24 +124,54 @@ function App() {
   }
 
   const colherEstado = (estado) => {
-    if(estado == true){
+    if (estado == true) {
       setTextoMensagemVisivel(false)
       setTextoMensagem(null)
     }
+  }
+
+  const updateAll = () => {
+
+    fetch("http://localhost:8080/tags/getAll")
+      .then(response => {
+        if (!response.ok) {
+          console.log("Erro ao pegar as etiquetas")
+        }
+        return response.json()
+      })
+      .then(data => {
+        setEtiquetas(data)
+      })
+
+    fetch("http://localhost:8080/stories/getAll")
+      .then(response => {
+        if (!response.ok) {
+          console.log("Erro ao pegar as histórias")
+        }
+        return response.json()
+      })
+      .then(data => {
+        const agrupado = data.reduce((tag, historia) => {
+          const tagId = historia.tag.id;
+          if (!tag[tagId]) {
+            tag[tagId] = [];
+          }
+          tag[tagId].push(historia);
+          return tag;
+        }, {});
+        setHistorias(agrupado)
+      })
+
   }
 
   return (
     <>
       <Mensagem texto={textoMensagem} visivel={textoMensagemVisivel} estado={colherEstado} />
       <h1>Um Pouco de Tudo</h1>
-      <button id="configButton" onClick={showConfigPopUp}>
-        <img src={botaoConfig} alt="" />
-      </button>
       <button id="graficoButton" onClick={showGraficoPopUp}>
         <img src={botaoGrafico} alt="" />
       </button>
-      <Configuration etiquetas={etiquetas} historias={historias} aoEnviar={importedValues}/>
-      <Grafico etiquetas={etiquetas} historias={historias} visivel={graficoVisivel} />
+      <Grafico visivel={graficoVisivel} />
       <div id="etiquetas">
         <div className="headerContainer">
           <h2>Etiquetas</h2>
@@ -220,10 +183,10 @@ function App() {
         </div>
         <div id="etiquetasContainer" className="collapsed">
 
-          {(etiquetas.length > 0) ? etiquetas.map((etiqueta, keyEtiqueta) => {
+          {(etiquetas.length > 0) ? etiquetas.map((etiqueta) => {
             return (
-              <div className="etiqueta" key={keyEtiqueta} onClick={() => handleShowEtiquetaForm(keyEtiqueta)}>
-                <p>{etiqueta[0]}</p>
+              <div className="etiqueta" key={etiqueta.id} onClick={() => handleShowEtiquetaForm(etiqueta.id)}>
+                <p>{etiqueta.name}</p>
               </div>)
           }) : (<p className="msgNaoHa">Não há etiquetas</p>)}
 
@@ -235,19 +198,19 @@ function App() {
           <button onClick={() => handleShowHistoriaForm(-1)} disabled={etiquetas.length <= 0}>Nova história</button>
         </div>
         <div className="historias">
-          {etiquetas.map((etiqueta, keyEtiqueta) => {
+          {etiquetas.map((etiqueta) => {
             return (
 
-              <div className={(historias[keyEtiqueta]?.length == 0 || historias.length == 0) ? "historiaContainer naoHaContainer" : "historiaContainer"} key={keyEtiqueta} >
-                <div className="historiaHeader iconeUncollapse" id={"historiaHeader" + keyEtiqueta} onClick={() => handleCollapse(keyEtiqueta)} >
+              <div className={(etiqueta.stories?.length == 0) ? "historiaContainer naoHaContainer" : "historiaContainer"} key={etiqueta.id} >
+                <div className="historiaHeader iconeUncollapse" id={"historiaHeader" + etiqueta.id} onClick={() => handleCollapse(etiqueta.id)} >
                   <div className="icone"></div>
-                  <h2>{etiqueta[0]}</h2>
+                  <h2>{etiqueta.name}</h2>
                 </div>
                 <div className="historiasList collapsed">
-                  {(historias[keyEtiqueta]?.length > 0) ? historias[keyEtiqueta]?.map((historia, keyHistoria) => {
+                  {(historias[etiqueta.id]?.length > 0) ? historias[etiqueta.id]?.map((historia) => {
                     return (
-                      <div className="historia" key={keyHistoria} onClick={() => handleShowHistoriaForm(keyHistoria, keyEtiqueta)}>
-                        <p>{historia[0]}</p>
+                      <div className="historia" key={historia.id} onClick={() => handleShowHistoriaForm(historia.id)}>
+                        <p>{historia.title}</p>
                       </div>
 
                     )
@@ -263,8 +226,8 @@ function App() {
         </div>
       </div>
 
-      <EtiquetaForm aoEnviar={handleEtiqueta} editarEtiqueta={idEtiqueta !== -1 ? etiquetas[idEtiqueta] : null} aoClicar={handleApagarEtiqueta} />
-      <HistoriaForm aoEnviar={handleHistoria} editarHistoria={historiaSelecionada} aoClicar={handleApagarHistoria} etiquetas={etiquetas} />
+      <EtiquetaForm aoEnviar={handleEtiqueta} idEtiqueta={idEtiqueta} />
+      <HistoriaForm aoEnviar={handleHistoria} idHistoria={idHistoria} />
 
     </>
   )

@@ -150,6 +150,8 @@ h1{
 .historiasList{
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
     gap: 1em;
     padding: 1em;
     transition: max-height .3s ease, padding .3s ease, opacity .3s ease;
