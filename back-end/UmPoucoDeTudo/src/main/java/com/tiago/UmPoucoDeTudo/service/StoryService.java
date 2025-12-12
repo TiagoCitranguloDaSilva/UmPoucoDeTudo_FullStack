@@ -1,9 +1,10 @@
 package com.tiago.UmPoucoDeTudo.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.tiago.UmPoucoDeTudo.model.Story;
 import com.tiago.UmPoucoDeTudo.model.Tag;
@@ -25,8 +26,9 @@ public class StoryService {
         return storyRepository.findAll();
     }
 
-    public Optional<Story> getById(Long id) {
-        return storyRepository.findById(id);
+    public Story getById(Long id) {
+        return storyRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
     }
 
     public Story save(Story story) {

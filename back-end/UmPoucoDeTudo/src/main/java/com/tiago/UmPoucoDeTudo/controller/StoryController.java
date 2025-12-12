@@ -1,8 +1,8 @@
 package com.tiago.UmPoucoDeTudo.controller;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,23 +27,23 @@ public class StoryController {
     }
 
     @GetMapping(path = "/getAll")
-    public List<Story> getAllStories(){
-        return storyService.getAll();
+    public ResponseEntity<List<Story>> getAllStories(){
+        return ResponseEntity.ok(storyService.getAll());
     }
 
     @GetMapping(path = "/getById/{id}")
-    public Optional<Story> getStoryById(@PathVariable Long id){
-        return storyService.getById(id);
+    public ResponseEntity<Story> getStoryById(@PathVariable Long id){
+        return ResponseEntity.ok(storyService.getById(id));
     }
 
     @PostMapping(path = "/new")
-    public Story createNewStory(@RequestBody Story story){
-        return storyService.save(story);
+    public ResponseEntity<Story> createNewStory(@RequestBody Story story){
+        return ResponseEntity.ok(storyService.save(story));
     }
 
     @PutMapping(path = "/update")
-    public Story updateStory(@RequestBody Story story){
-        return storyService.save(story);
+    public ResponseEntity<Story> updateStory(@RequestBody Story story){
+        return ResponseEntity.ok(storyService.save(story));
     }
 
     @DeleteMapping(path = "/delete/{id}")

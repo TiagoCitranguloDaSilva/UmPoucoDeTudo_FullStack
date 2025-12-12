@@ -1,8 +1,8 @@
 package com.tiago.UmPoucoDeTudo.controller;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,23 +27,23 @@ public class TagController {
     }
 
     @GetMapping(path = "/getAll")
-    public List<Tag> getAllTags(){
-        return tagService.getAll();
+    public ResponseEntity<List<Tag>> getAllTags(){
+        return ResponseEntity.ok(tagService.getAll());
     }
 
     @GetMapping(path = "/getById/{id}")
-    public Optional<Tag> getTagById(@PathVariable Long id){
-        return tagService.getById(id);
+    public ResponseEntity<Tag> getTagById(@PathVariable Long id){
+        return ResponseEntity.ok(tagService.getById(id));
     }
 
     @PostMapping(path = "/new")
-    public Tag createNewTag(@RequestBody Tag tag){
-        return tagService.save(tag);
+    public ResponseEntity<Tag> createNewTag(@RequestBody Tag tag){
+        return ResponseEntity.ok(tagService.save(tag));
     }
 
     @PutMapping(path = "/update")
-    public Tag updateTag(@RequestBody Tag tag){
-        return tagService.save(tag);
+    public ResponseEntity<Tag> updateTag(@RequestBody Tag tag){
+        return ResponseEntity.ok(tagService.save(tag));
     }
 
     @DeleteMapping(path = "/delete/{id}")

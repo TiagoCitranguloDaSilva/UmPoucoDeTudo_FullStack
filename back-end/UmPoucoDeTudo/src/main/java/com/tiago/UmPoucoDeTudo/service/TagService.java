@@ -1,9 +1,10 @@
 package com.tiago.UmPoucoDeTudo.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.tiago.UmPoucoDeTudo.model.Tag;
 import com.tiago.UmPoucoDeTudo.repository.TagRepository;
@@ -21,8 +22,9 @@ public class TagService {
         return tagRepository.findAll();
     }
 
-    public Optional<Tag> getById(Long id){
-        return tagRepository.findById(id);
+    public Tag getById(Long id){
+        return tagRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Etiqueta não encontrada!"));
     }
 
     public Tag save(Tag tag){
