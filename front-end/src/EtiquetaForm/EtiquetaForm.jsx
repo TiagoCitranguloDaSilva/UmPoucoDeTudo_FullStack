@@ -75,16 +75,14 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
             body: JSON.stringify(corpo)
         })
             .then(response => {
+                
                 if (!response.ok) {
                     console.log("Erro ao salvar etiqueta!")
                 }
-                return response.json()
-            })
-            .then(data => {
+
                 fecharFormulario()
                 aoEnviar("Etiqueta salva!")
             })
-
 
     }
 

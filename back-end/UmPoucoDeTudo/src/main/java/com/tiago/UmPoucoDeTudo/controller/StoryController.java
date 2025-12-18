@@ -2,6 +2,7 @@ package com.tiago.UmPoucoDeTudo.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tiago.UmPoucoDeTudo.model.Story;
+import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPostRequestBody;
+import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPutRequestBody;
 import com.tiago.UmPoucoDeTudo.service.StoryService;
 
 @RestController
@@ -37,13 +40,15 @@ public class StoryController {
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Story> createNewStory(@RequestBody Story story){
-        return ResponseEntity.ok(storyService.save(story));
+    public ResponseEntity<Story> createNewStory(@RequestBody StoryPostRequestBody story){
+        return ResponseEntity.ok(storyService.createStory(story));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Story> updateStory(@RequestBody Story story){
-        return ResponseEntity.ok(storyService.save(story));
+    public ResponseEntity<Void> updateStory(@RequestBody StoryPutRequestBody story){
+        System.out.println(story);
+        storyService.replace(story);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/delete/{id}")

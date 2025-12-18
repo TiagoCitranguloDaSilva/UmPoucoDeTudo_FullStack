@@ -2,6 +2,7 @@ package com.tiago.UmPoucoDeTudo.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tiago.UmPoucoDeTudo.model.Tag;
+import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPostRequestBody;
+import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPutRequestBody;
 import com.tiago.UmPoucoDeTudo.service.TagService;
 
 @RestController
@@ -37,13 +40,14 @@ public class TagController {
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Tag> createNewTag(@RequestBody Tag tag){
-        return ResponseEntity.ok(tagService.save(tag));
+    public ResponseEntity<Tag> createNewTag(@RequestBody TagPostRequestBody tag){
+        return ResponseEntity.ok(tagService.createTag(tag));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Tag> updateTag(@RequestBody Tag tag){
-        return ResponseEntity.ok(tagService.save(tag));
+    public ResponseEntity<Void> updateTag(@RequestBody TagPutRequestBody tag){
+        tagService.replace(tag);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/delete/{id}")

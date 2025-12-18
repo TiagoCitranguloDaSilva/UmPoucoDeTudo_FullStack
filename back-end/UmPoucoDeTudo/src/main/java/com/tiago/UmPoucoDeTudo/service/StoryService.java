@@ -9,6 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 import com.tiago.UmPoucoDeTudo.model.Story;
 import com.tiago.UmPoucoDeTudo.model.Tag;
 import com.tiago.UmPoucoDeTudo.repository.StoryRepository;
+import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPostRequestBody;
+import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPutRequestBody;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -31,8 +33,27 @@ public class StoryService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
     }
 
-    public Story save(Story story) {
+    public Story createStory(StoryPostRequestBody requestStory) {
+        Story story = Story.builder()
+            .title(requestStory.getTitle())
+            .story(requestStory.getStory())
+            .created_at(requestStory.getCreated_at())
+            .tag(requestStory.getTag())
+        .build();
         return storyRepository.save(story);
+    }
+
+    public void replace(StoryPutRequestBody requestStory){
+
+        Story story = Story.builder()
+            .id(requestStory.getId())
+            .title(requestStory.getTitle())
+            .story(requestStory.getStory())
+            .created_at(requestStory.getCreated_at())
+            .tag(requestStory.getTag())
+        .build();
+        storyRepository.save(story);
+
     }
 
     @Transactional

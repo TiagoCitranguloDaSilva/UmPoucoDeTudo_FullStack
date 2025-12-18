@@ -8,6 +8,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.tiago.UmPoucoDeTudo.model.Tag;
 import com.tiago.UmPoucoDeTudo.repository.TagRepository;
+import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPostRequestBody;
+import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPutRequestBody;
 
 @Service
 public class TagService {
@@ -27,8 +29,21 @@ public class TagService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Etiqueta não encontrada!"));
     }
 
-    public Tag save(Tag tag){
+    public Tag createTag(TagPostRequestBody requestTag){
+        Tag tag = Tag.builder()
+            .name(requestTag.getName())
+            .created_at(requestTag.getCreated_at())
+        .build();
         return tagRepository.save(tag);
+    }
+
+    public void replace(TagPutRequestBody requestTag){
+        Tag tag = Tag.builder()
+            .id(requestTag.getId())
+            .name(requestTag.getName())
+            .created_at(requestTag.getCreated_at())
+        .build();
+        tagRepository.save(tag);
     }
 
     public void deleteTagById(Long id){
