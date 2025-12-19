@@ -1,5 +1,5 @@
 # Um Pouco De Tudo - Full Stack
-![GitHub License](https://img.shields.io/github/license/TiagoCitranguloDaSilva/UmPoucoDeTudo_FullStack)
+![GitHub License](https://img.shields.io/github/license/tiagocitrangulodasilva/UmPoucoDeTudo_FullStack)
 
 O objetivo do projeto é ser um diário, onde o usuário pode escrever suas histórias e catalogá-las por meio de etiquetas personalizáveis, porém não precisa necessariamente ser usado para contar histórias, o usuário pode usar o software como um bloco de notas também caso queira.
 
