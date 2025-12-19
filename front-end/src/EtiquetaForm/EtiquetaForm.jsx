@@ -52,16 +52,8 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
             metodo = "PUT"
         } else {
 
-            let time = new Date()
-            let anoAtual = time.getFullYear()
-            let mesAtual = time.getMonth() + 1
-            let diaAtual = time.getDate()
-
-            let tempo = `${anoAtual}-${mesAtual}-${(diaAtual < 10) ? `0${diaAtual}` : `${diaAtual}`}`
-
             corpo = {
-                "name": nomeEtiqueta,
-                "created_at": tempo
+                "name": nomeEtiqueta
             }
             rota = "http://localhost:8080/tags/new"
             metodo = "POST"

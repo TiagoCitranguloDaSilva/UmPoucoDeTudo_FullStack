@@ -37,7 +37,6 @@ public class StoryService {
         Story story = Story.builder()
             .title(requestStory.getTitle())
             .story(requestStory.getStory())
-            .created_at(requestStory.getCreated_at())
             .tag(requestStory.getTag())
         .build();
         return storyRepository.save(story);

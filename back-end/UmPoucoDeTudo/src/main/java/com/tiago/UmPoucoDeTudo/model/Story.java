@@ -36,7 +36,8 @@ public class Story {
     private String story;
 
     @Column(nullable = false)
-    private LocalDate created_at;
+    @Builder.Default
+    private LocalDate created_at = LocalDate.now();
 
     @ManyToOne
     @JoinColumn(name = "tag_id", nullable = false)

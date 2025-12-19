@@ -37,7 +37,8 @@ public class Tag {
     private String name;
 
     @Column(nullable = false)
-    private LocalDate created_at;
+    @Builder.Default
+    private LocalDate created_at = LocalDate.now();
 
     @OneToMany(mappedBy = "tag", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Story> stories;

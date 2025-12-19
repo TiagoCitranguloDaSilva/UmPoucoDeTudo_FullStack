@@ -70,19 +70,11 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
             }
         } else {
 
-            let time = new Date()
-            let anoAtual = time.getFullYear()
-            let mesAtual = time.getMonth() + 1
-            let diaAtual = time.getDate()
-
-            let tempo = `${anoAtual}-${mesAtual}-${(diaAtual < 10) ? `0${diaAtual}` : `${diaAtual}`}`
-
             rota = "http://localhost:8080/stories/new"
             metodo = "POST"
             corpo = {
                 "title": nomeHistoria,
                 "story": historia,
-                "created_at": tempo,
                 "tag": { "id": escolha }
             }
         }

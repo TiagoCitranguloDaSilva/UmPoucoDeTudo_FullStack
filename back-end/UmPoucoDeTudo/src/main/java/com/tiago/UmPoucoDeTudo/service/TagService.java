@@ -32,7 +32,6 @@ public class TagService {
     public Tag createTag(TagPostRequestBody requestTag){
         Tag tag = Tag.builder()
             .name(requestTag.getName())
-            .created_at(requestTag.getCreated_at())
         .build();
         return tagRepository.save(tag);
     }
