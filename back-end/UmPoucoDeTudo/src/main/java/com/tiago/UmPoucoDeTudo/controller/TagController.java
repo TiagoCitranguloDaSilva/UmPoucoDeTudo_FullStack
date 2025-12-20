@@ -19,6 +19,8 @@ import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPostRequestBody;
 import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPutRequestBody;
 import com.tiago.UmPoucoDeTudo.service.TagService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/tags")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -40,12 +42,12 @@ public class TagController {
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Tag> createNewTag(@RequestBody TagPostRequestBody tag){
+    public ResponseEntity<Tag> createNewTag(@RequestBody @Valid TagPostRequestBody tag){
         return ResponseEntity.ok(tagService.createTag(tag));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Void> updateTag(@RequestBody TagPutRequestBody tag){
+    public ResponseEntity<Void> updateTag(@RequestBody @Valid TagPutRequestBody tag){
         tagService.replace(tag);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

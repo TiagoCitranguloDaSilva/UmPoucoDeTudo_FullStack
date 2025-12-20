@@ -12,7 +12,6 @@ import com.tiago.UmPoucoDeTudo.repository.StoryRepository;
 import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPostRequestBody;
 import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPutRequestBody;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
