@@ -46,7 +46,6 @@ public class StoryController {
 
     @PutMapping(path = "/update")
     public ResponseEntity<Void> updateStory(@RequestBody StoryPutRequestBody story){
-        System.out.println(story);
         storyService.replace(story);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
