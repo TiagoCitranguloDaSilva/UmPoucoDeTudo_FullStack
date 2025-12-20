@@ -37,6 +37,9 @@ public class TagService {
     }
 
     public void replace(TagPutRequestBody requestTag){
+
+        getById(requestTag.getId());
+
         Tag tag = Tag.builder()
             .id(requestTag.getId())
             .name(requestTag.getName())
@@ -46,6 +49,9 @@ public class TagService {
     }
 
     public void deleteTagById(Long id){
+
+        getById(id);
+
         tagRepository.deleteById(id);
     }
 

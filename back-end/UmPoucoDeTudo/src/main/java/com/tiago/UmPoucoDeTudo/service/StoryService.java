@@ -30,7 +30,7 @@ public class StoryService {
 
     public Story getById(Long id) {
         return storyRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "História não encontrada!"));
     }
 
     public Story createStory(StoryPostRequestBody requestStory) {
@@ -43,6 +43,8 @@ public class StoryService {
     }
 
     public void replace(StoryPutRequestBody requestStory){
+
+        getById(requestStory.getId());
 
         Story story = Story.builder()
             .id(requestStory.getId())
@@ -57,8 +59,7 @@ public class StoryService {
 
     @Transactional
     public void deleteStoryById(Long id) {
-        Story story = storyRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Story não encontrada"));
+        Story story = getById(id);
 
         Tag tag = story.getTag();
         tag.getStories().remove(story);
