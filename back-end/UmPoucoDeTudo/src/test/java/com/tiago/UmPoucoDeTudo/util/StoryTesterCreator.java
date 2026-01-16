@@ -1,6 +1,7 @@
 package com.tiago.UmPoucoDeTudo.util;
 
 import com.tiago.UmPoucoDeTudo.model.Story;
+import com.tiago.UmPoucoDeTudo.model.Tag;
 
 public class StoryTesterCreator {
 
@@ -21,6 +22,14 @@ public class StoryTesterCreator {
                 .title(DEFAULT_TITLE)
                 .story(DEFAULT_STORY)
                 .tag(TagTesterCreator.createTag(tagName))
+                .build();
+    }
+
+    public static Story createStory(Tag tag) {
+        return Story.builder()
+                .title(DEFAULT_TITLE)
+                .story(DEFAULT_STORY)
+                .tag(tag)
                 .build();
     }
 
