@@ -89,12 +89,6 @@ function Home() {
     }
   }
 
-  const importedValues = (importEtiquetas, importHistorias) => {
-    setEtiquetas(importEtiquetas)
-    setHistorias(importHistorias)
-    mostrarMensagem("Importação realizada!")
-  }
-
   function showGraficoPopUp() {
     if (document.querySelector("#grafico").classList.contains("hidden")) {
       document.querySelector("#grafico").classList.remove("hidden")
@@ -102,17 +96,6 @@ function Home() {
     } else {
       document.querySelector("#grafico").classList.add("hidden")
       setGraficoVisivel(false)
-    }
-  }
-
-  function showConfigPopUp() {
-    if (document.querySelector("#config").classList.contains("hidden")) {
-      document.querySelector("#config").classList.remove("hidden")
-    } else {
-      document.querySelector("#config").classList.add("hidden")
-      if (!document.querySelector("#inputFileContainer").classList.contains("hidden")) {
-        document.querySelector("#inputFileContainer").classList.add("hidden")
-      }
     }
   }
 
