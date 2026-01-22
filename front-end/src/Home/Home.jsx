@@ -5,10 +5,13 @@ import HistoriaForm from "../HistoriaForm/HistoriaForm"
 import Grafico from "../grafico/Grafico.jsx"
 import botaoGrafico from '../assets/botaoGrafico.png'
 import Mensagem from '../Mensagem/Mensagem.jsx'
+import { useNavigate } from 'react-router-dom'
+
+import doFetch from '../util/fetchModel.js'
 
 function Home() {
 
-    
+
   const [etiquetas, setEtiquetas] = useState([])
   const [idEtiqueta, setIdEtiqueta] = useState(-1)
 
@@ -19,6 +22,8 @@ function Home() {
 
   const [textoMensagem, setTextoMensagem] = useState(null)
   const [textoMensagemVisivel, setTextoMensagemVisivel] = useState(false)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     updateAll()
@@ -113,108 +118,96 @@ function Home() {
     }
   }
 
-  const updateAll = () => {
+  const updateAll = async () => {
 
-    fetch("http://localhost:8080/tags/getAll")
-      .then(response => {
-        if (!response.ok) {
-          console.log("Erro ao pegar as etiquetas")
-        }
-        return response.json()
-      })
-      .then(data => {
-        setEtiquetas(data)
-      })
+    let responseEtiquetas = await doFetch(navigate, "http://localhost:8080/tags/getAll")
+    if (responseEtiquetas) setEtiquetas(responseEtiquetas)
 
-    fetch("http://localhost:8080/stories/getAll")
-      .then(response => {
-        if (!response.ok) {
-          console.log("Erro ao pegar as histórias")
+    let responseHistorias = await doFetch(navigate, "http://localhost:8080/stories/getAll")
+    if (responseHistorias) {
+
+
+      const agrupado = responseHistorias.reduce((tag, historia) => {
+        const tagId = historia.tag.id;
+        if (!tag[tagId]) {
+          tag[tagId] = [];
         }
-        return response.json()
-      })
-      .then(data => {
-        const agrupado = data.reduce((tag, historia) => {
-          const tagId = historia.tag.id;
-          if (!tag[tagId]) {
-            tag[tagId] = [];
-          }
-          tag[tagId].push(historia);
-          return tag;
-        }, {});
-        setHistorias(agrupado)
-      })
+        tag[tagId].push(historia);
+        return tag;
+      }, {});
+      setHistorias(agrupado)
+    }
 
   }
 
-    return (
-        <>
+  return (
+    <>
 
-            <Mensagem texto={textoMensagem} visivel={textoMensagemVisivel} estado={colherEstado} />
-            <h1>Um Pouco de Tudo</h1>
-            <button id="graficoButton" onClick={showGraficoPopUp}>
-                <img src={botaoGrafico} alt="" />
-            </button>
-            <Grafico visivel={graficoVisivel} />
-            <div id="etiquetas">
-                <div className="headerContainer">
-                    <h2>Etiquetas</h2>
-                    <button onClick={() => handleShowEtiquetaForm()}>Nova etiqueta</button>
+      <Mensagem texto={textoMensagem} visivel={textoMensagemVisivel} estado={colherEstado} />
+      <h1>Um Pouco de Tudo</h1>
+      <button id="graficoButton" onClick={showGraficoPopUp}>
+        <img src={botaoGrafico} alt="" />
+      </button>
+      <Grafico visivel={graficoVisivel} />
+      <div id="etiquetas">
+        <div className="headerContainer">
+          <h2>Etiquetas</h2>
+          <button onClick={() => handleShowEtiquetaForm()}>Nova etiqueta</button>
+        </div>
+        <div id="etiquetasHeader" className="iconeUncollapse" onClick={collapseEtiqueta}>
+          <div className="icone"></div>
+          <h2>Etiquetas</h2>
+        </div>
+        <div id="etiquetasContainer" className="collapsed">
+
+          {(etiquetas.length > 0) ? etiquetas.map((etiqueta) => {
+            return (
+              <div className="etiqueta" key={etiqueta.id} onClick={() => handleShowEtiquetaForm(etiqueta.id)}>
+                <p>{etiqueta.name}</p>
+              </div>)
+          }) : (<p className="msgNaoHa">Não há etiquetas</p>)}
+
+        </div>
+      </div>
+      <div id="historias">
+        <div className="headerContainer">
+          <h2>Histórias</h2>
+          <button onClick={() => handleShowHistoriaForm(-1)} disabled={etiquetas.length <= 0}>Nova história</button>
+        </div>
+        <div className="historias">
+          {etiquetas.map((etiqueta) => {
+            return (
+
+              <div className={(etiqueta.stories?.length == 0) ? "historiaContainer naoHaContainer" : "historiaContainer"} key={etiqueta.id} >
+                <div className="historiaHeader iconeUncollapse" id={"historiaHeader" + etiqueta.id} onClick={() => handleCollapse(etiqueta.id)} >
+                  <div className="icone"></div>
+                  <h2>{etiqueta.name}</h2>
                 </div>
-                <div id="etiquetasHeader" className="iconeUncollapse" onClick={collapseEtiqueta}>
-                    <div className="icone"></div>
-                    <h2>Etiquetas</h2>
+                <div className="historiasList collapsed">
+                  {(historias[etiqueta.id]?.length > 0) ? historias[etiqueta.id]?.map((historia) => {
+                    return (
+                      <div className="historia" key={historia.id} onClick={() => handleShowHistoriaForm(historia.id)}>
+                        <p>{historia.title}</p>
+                      </div>
+
+                    )
+                  }) : (
+                    <p className="msgNaoHa">Não há histórias</p>
+                  )}
                 </div>
-                <div id="etiquetasContainer" className="collapsed">
-
-                    {(etiquetas.length > 0) ? etiquetas.map((etiqueta) => {
-                        return (
-                            <div className="etiqueta" key={etiqueta.id} onClick={() => handleShowEtiquetaForm(etiqueta.id)}>
-                                <p>{etiqueta.name}</p>
-                            </div>)
-                    }) : (<p className="msgNaoHa">Não há etiquetas</p>)}
-
-                </div>
-            </div>
-            <div id="historias">
-                <div className="headerContainer">
-                    <h2>Histórias</h2>
-                    <button onClick={() => handleShowHistoriaForm(-1)} disabled={etiquetas.length <= 0}>Nova história</button>
-                </div>
-                <div className="historias">
-                    {etiquetas.map((etiqueta) => {
-                        return (
-
-                            <div className={(etiqueta.stories?.length == 0) ? "historiaContainer naoHaContainer" : "historiaContainer"} key={etiqueta.id} >
-                                <div className="historiaHeader iconeUncollapse" id={"historiaHeader" + etiqueta.id} onClick={() => handleCollapse(etiqueta.id)} >
-                                    <div className="icone"></div>
-                                    <h2>{etiqueta.name}</h2>
-                                </div>
-                                <div className="historiasList collapsed">
-                                    {(historias[etiqueta.id]?.length > 0) ? historias[etiqueta.id]?.map((historia) => {
-                                        return (
-                                            <div className="historia" key={historia.id} onClick={() => handleShowHistoriaForm(historia.id)}>
-                                                <p>{historia.title}</p>
-                                            </div>
-
-                                        )
-                                    }) : (
-                                        <p className="msgNaoHa">Não há histórias</p>
-                                    )}
-                                </div>
-                            </div>
-                        )
-                    })}
+              </div>
+            )
+          })}
 
 
-                </div>
-            </div>
+        </div>
+      </div>
 
-            <EtiquetaForm aoEnviar={handleEtiqueta} idEtiqueta={idEtiqueta} />
-            <HistoriaForm aoEnviar={handleHistoria} idHistoria={idHistoria} />
+      <EtiquetaForm aoEnviar={handleEtiqueta} idEtiqueta={idEtiqueta} />
+      <HistoriaForm aoEnviar={handleHistoria} idHistoria={idHistoria} />
 
-        </>
-    )
+    </>
+  )
 }
 
 export default Home;

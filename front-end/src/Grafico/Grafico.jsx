@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto';
 import "./Grafico.css"
+import { useNavigate } from 'react-router-dom';
+import doFetch from '../util/fetchModel';
 
 function Grafico({ visivel }) {
 
@@ -13,6 +15,8 @@ function Grafico({ visivel }) {
             datasets: [],
         }
     )
+
+    const navigate = useNavigate()
 
     const [etiquetas, setEtiquetas] = useState([])
     const [historias, setHistorias] = useState([])
@@ -132,36 +136,24 @@ function Grafico({ visivel }) {
 
     }
 
-    function updateAll(){
-        fetch("http://localhost:8080/tags/getAll")
-            .then(response => {
-                if (!response.ok) {
-                    console.log("Erro ao pegar as etiquetas")
-                }
-                return response.json()
-            })
-            .then(data => {
-                setEtiquetas(data)
-            })
+    async function updateAll() {
 
-        fetch("http://localhost:8080/stories/getAll")
-            .then(response => {
-                if (!response.ok) {
-                    console.log("Erro ao pegar as histórias")
+        const responseEtiquetas = await doFetch(navigate, "http://localhost:8080/tags/getAll")
+        if (responseEtiquetas) setEtiquetas(responseEtiquetas)
+
+        const responseHistorias = await doFetch(navigate, "http://localhost:8080/stories/getAll")
+        if (responseHistorias) {
+            const agrupado = responseHistorias.reduce((tag, historia) => {
+                const tagId = historia.tag.id;
+                if (!tag[tagId]) {
+                    tag[tagId] = [];
                 }
-                return response.json()
-            })
-            .then(data => {
-                const agrupado = data.reduce((tag, historia) => {
-                    const tagId = historia.tag.id;
-                    if (!tag[tagId]) {
-                        tag[tagId] = [];
-                    }
-                    tag[tagId].push(historia);
-                    return tag;
-                }, {});
-                setHistorias(agrupado)
-            })
+                tag[tagId].push(historia);
+                return tag;
+            }, {});
+            setHistorias(agrupado)
+        }
+
     }
 
 

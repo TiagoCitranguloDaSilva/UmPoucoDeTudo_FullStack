@@ -1,17 +1,37 @@
 
 import "./LoginPage.css"
 import React, { useState } from 'react'
+import doFetch from "../util/fetchModel"
+import { useNavigate } from "react-router-dom"
 
 function LoginPage() {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
+    const navigate = useNavigate()
+
     const handleSubmit = (e) => {
 
         e.preventDefault()
-        console.log(username)
-        console.log(password)
+
+        const doRequest = async () => {
+            const response = await doFetch(null, "http://localhost:8080/auth/login", "POST", {
+                "username": username,
+                "password": password
+            }, {}, false)
+
+            if (response) {
+                localStorage.setItem("userToken", `Bearer ${response}`)
+                navigate("/UmPoucoDeTudo")
+            }
+        }
+
+        doRequest()
+
+
+
+
 
     }
 

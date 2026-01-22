@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import "./EtiquetaForm.css"
+import doFch from '../util/fetchModel'
+import { useNavigate } from 'react-router-dom'
 
 function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
 
@@ -8,25 +10,25 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
     const [editBool, setEditBool] = useState(false)
     const [dataEtiquetaFormatada, setDataEtiquetaFormatada] = useState(null)
 
+    const navigate = useNavigate()
+
     useEffect(() => {
         if (idEtiqueta != -1) {
             setEditBool(true)
             document.querySelector(".buttonApagar").style.display = 'block'
 
-            fetch(`http://localhost:8080/tags/getById/${idEtiqueta}`)
-                .then(response => {
-                    if (!response.ok) {
-                        console.log("Erro ao pegar dados da etiqueta")
-                    }
-                    return response.json()
-                })
-                .then(data => {
-                    setNomeEtiqueta(data.name)
-                    setDataEtiqueta(data.created_at)
+            const carregarDados = async () => {
+                const responseEtiqueta = await doFetch(navigate, `http://localhost:8080/tags/getById/${idEtiqueta}`)
+                if (responseEtiqueta) {
+                    setNomeEtiqueta(responseEtiqueta.name)
+                    setDataEtiqueta(responseEtiqueta.created_at)
 
-                    const date = (data.created_at).split("-")
+                    const date = (responseEtiqueta.created_at).split("-")
                     setDataEtiquetaFormatada(`${date[2]}/${date[1]}/${date[0]}`)
-                })
+                }
+            }
+
+            carregarDados()
 
         } else {
             setEditBool(false)
@@ -59,22 +61,15 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
             metodo = "POST"
         }
 
-        fetch(rota, {
-            method: metodo,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(corpo)
-        })
-            .then(response => {
-                
-                if (!response.ok) {
-                    console.log("Erro ao salvar etiqueta!")
-                }
-
+        const doRequest = async () => {
+            const request = await doFetch(navigate, rota, metodo, corpo)
+            if (request) {
                 fecharFormulario()
                 aoEnviar("Etiqueta salva!")
-            })
+            }
+        }
+
+        doRequest()
 
     }
 
@@ -97,24 +92,16 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
         mostrarConfirmacao()
     }
 
-    const handleDeleteEtiqueta = (e) => {
+    const handleDeleteEtiqueta = async (e) => {
         e.preventDefault()
 
-        fetch(`http://localhost:8080/tags/delete/${idEtiqueta}`, {
-            "method": "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    console.log("Erro ao apagar etiqueta!")
-                }
+        const request = await doFetch(navigate, `http://localhost:8080/tags/delete/${idEtiqueta}`, "DELETE")
+        if (request) {
+            mostrarConfirmacao()
+            fecharFormulario()
+            aoEnviar("Etiqueta apagada!")
+        }
 
-                aoEnviar("Etiqueta apagada!")
-                mostrarConfirmacao()
-                fecharFormulario()
-            })
     }
 
     return (

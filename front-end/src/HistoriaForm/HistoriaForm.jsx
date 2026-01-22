@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import "./HistoriaForm.css"
-
+import doFetch from '../util/fetchModel'
+import { useNavigate } from 'react-router-dom'
 
 function HistoriaForm({ aoEnviar, idHistoria }) {
 
@@ -11,40 +12,38 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
     const [etiquetas, setEtiquetas] = useState([])
     const [dataFormatada, setDataFormatada] = useState(null)
 
+    const navigate = useNavigate()
+
 
     useEffect(() => {
 
-        fetch(`http://localhost:8080/tags/getAll`)
-            .then(response => {
-                if (!response.ok) {
-                    console.log("Erro ao pegar etiquetas")
-                }
-                return response.json()
-            })
-            .then(data => {
-                setEtiquetas(data)
-                setEscolha(data[0].id)
-            })
+        const doRequest = async () => {
+            const request = await doFetch(navigate, `http://localhost:8080/tags/getAll`)
+            if (request) {
+                setEtiquetas(request)
+                setEscolha(request[0].id)
+            }
+        }
+
+        doRequest()
 
         if (idHistoria != -1) {
             document.querySelector("#formHistoria .buttonApagar").style.display = 'block'
 
-            fetch(`http://localhost:8080/stories/getById/${idHistoria}`)
-                .then(response => {
-                    if (!response.ok) {
-                        console.log("Erro ao pegar dados da história")
-                    }
-                    return response.json()
-                })
-                .then(data => {
-                    setNomeHistoria(data.title)
-                    setHistoria(data.story)
-                    setDataHistoria(data.created_at)
-                    setEscolha(data.tag.id)
+            const doRequest = async () => {
+                const request = await doFetch(navigate, `http://localhost:8080/stories/getById/${idHistoria}`)
+                if (request) {
+                    setNomeHistoria(request.title)
+                    setHistoria(request.story)
+                    setDataHistoria(request.created_at)
+                    setEscolha(request.tag.id)
 
-                    const date = (data.created_at).split("-")
+                    const date = (request.created_at).split("-")
                     setDataFormatada(`${date[2]}/${date[1]}/${date[0]}`)
-                })
+                }
+            }
+
+            doRequest()
 
         } else {
             document.querySelector("#formHistoria .buttonApagar").style.display = 'none'
@@ -79,22 +78,15 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
             }
         }
 
-        fetch(rota, {
-            "method": metodo,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(corpo)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    console.log("Erro ao salvar a história")
-                }
-                aoEnviar("História salva!")
+        const doRequest = async () => {
+            const request = await doFetch(navigate, rota, metodo, corpo)
+            if (request) {
                 fecharFormulario()
-            })
+                aoEnviar("História salva!")
+            }
+        }
 
-
+        doRequest()
 
     }
 
@@ -119,24 +111,16 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
         mostrarConfirmacao()
     }
 
-    const handleDeleteEtiqueta = (e) => {
+    const handleDeleteEtiqueta = async (e) => {
         e.preventDefault()
-    
-        fetch(`http://localhost:8080/stories/delete/${idHistoria}`, {
-            method: "DELETE"
-        })
-            .then(response => {
-                if(!response.ok){
-                    console.log("Erro ao apagar a história!")
-                }
 
-                mostrarConfirmacao()
-                fecharFormulario()
-                aoEnviar("História apagada!")
-            })
+        const request = await doFetch(navigate, `http://localhost:8080/stories/delete/${idHistoria}`, "DELETE")
+        if (request) {
+            mostrarConfirmacao()
+            fecharFormulario()
+            aoEnviar("História apagada!")
+        }
 
-
-        
     }
 
     return (
