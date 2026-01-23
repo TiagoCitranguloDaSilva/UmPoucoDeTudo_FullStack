@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 
 function LoginPage() {
 
-    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
     const navigate = useNavigate()
@@ -17,7 +17,7 @@ function LoginPage() {
 
         const doRequest = async () => {
             const response = await doFetch(null, "http://localhost:8080/auth/login", "POST", {
-                "username": username,
+                "email": email,
                 "password": password
             }, {}, false)
 
@@ -40,10 +40,10 @@ function LoginPage() {
             <div id="loginForm">
                 <h1>Login</h1>
                 <form autoComplete="off" onSubmit={handleSubmit}>
-                    <p><label htmlFor="username">Nome de usuário: </label><input type="text" name="" id="username" placeholder="Nome de usuário" required onChange={(e) => setUsername(e.target.value)} /></p>
+                    <p><label htmlFor="username">Email: </label><input type="email" name="" id="email" placeholder="exemplo@email.com" required onChange={(e) => setEmail(e.target.value)} /></p>
                     <p><label htmlFor="password">Senha: </label><input type="password" name="" id="password" placeholder="Senha" required onChange={(e) => setPassword(e.target.value)} /></p>
                     <input type="submit" value="Entrar" id="btnLogin" />
-                    <p id="msgCadastro">Não tem conta? <a href="">Cadastre-se</a></p>
+                    <p id="msgCadastro">Não tem conta? <a href="register">Cadastre-se</a></p>
                 </form>
             </div>
         </div>

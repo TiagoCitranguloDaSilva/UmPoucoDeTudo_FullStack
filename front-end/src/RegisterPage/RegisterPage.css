@@ -5,7 +5,7 @@ body,
 
 }
 
-#loginContainer {
+#registerContainer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -13,7 +13,7 @@ body,
 }
 
 
-#loginForm {
+#registerForm {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,17 +23,17 @@ body,
     border-radius: 12px;
     border: 5px solid #546eac;
     gap: 2em;
-    padding: 3em 2em;
+    padding: 4em 2em;
 }
 
-#loginForm h1 {
+#registerForm h1 {
     text-align: center;
     font-size: 2.6rem;
     padding: 0;
     margin: 0;
 }
 
-#loginForm form {
+#registerForm form {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,7 +41,7 @@ body,
     gap: .5em;
 }
 
-#loginForm form p {
+#registerForm form p {
     width: 100%;
     display: grid;
     align-items: center;
@@ -49,11 +49,11 @@ body,
     grid-template-rows: 1fr 1fr;
 }
 
-#loginForm form p label {
+#registerForm form p label {
     text-align: left;
 }
 
-#loginForm form p input {
+#registerForm form p input {
     border-radius: 10px;
     height: 2.8em;
     border: 2px solid rgb(117, 117, 117);
@@ -62,10 +62,10 @@ body,
     width: 16em;
 }
 
-#btnLogin {
+#btnRegister {
     background-color: #2a4689;
     padding: .8em 1.3em;
-    margin: 1em;
+    margin: .5em;
     font-size: 1.1rem;
     font-weight: bold;
     border-radius: 7px;
@@ -75,11 +75,11 @@ body,
     cursor: pointer;
 }
 
-#btnLogin:hover {
+#btnRegister:hover {
     transform: scale(1.05);
 }
 
-#msgCadastro {
+#msgLogin {
     display: flex !important;
     align-items: center;
     justify-content: center;

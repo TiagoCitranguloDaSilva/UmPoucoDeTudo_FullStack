@@ -16,28 +16,36 @@ async function doFetch(onRedirect, rota, metodo = "get", body = null, headersExt
         ...headersExtras
     }
 
-    if(needToBeAuthenticated){
+    if (needToBeAuthenticated) {
         headers["Authorization"] = token
     }
 
     if (body) {
         body = JSON.stringify(body)
+        console.log(body)
         headers["Content-Type"] = "application/json"
     }
 
 
-    const response = await fetch(rota, {
-        "method": metodo,
-        "body": body,
-        headers: headers
-    })
+    let response
+
+    try {
+        response = await fetch(rota, {
+            "method": metodo,
+            "body": body,
+            headers: headers
+        })
+    } catch (exception) {
+        onRedirect("login")
+        return;
+    }
 
     if (response.status == 403) {
         localStorage.setItem("userToken", "")
 
-        if(!needToBeAuthenticated) return null
+        if (!needToBeAuthenticated) return null
 
-        onRedirect("/login")
+        onRedirect("/UmPoucoDeTudo/login")
         return null
     }
     if (!response.ok) {
@@ -47,11 +55,11 @@ async function doFetch(onRedirect, rota, metodo = "get", body = null, headersExt
     let data;
     if (response.headers.get("Content-Type")?.includes("application/json")) {
         data = await response.json()
-    }else{
+    } else {
         data = await response.text()
     }
 
-    if(data == "") return true
+    if (data == "") return true
 
     if (!data) return null
 
