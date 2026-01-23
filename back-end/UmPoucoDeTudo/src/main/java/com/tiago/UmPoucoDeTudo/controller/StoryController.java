@@ -25,35 +25,36 @@ import jakarta.validation.Valid;
 @RequestMapping("/stories")
 @CrossOrigin(origins = "http://localhost:5173")
 public class StoryController {
-    
+
     private final StoryService storyService;
-    public StoryController(StoryService storyService){
+
+    public StoryController(StoryService storyService) {
         this.storyService = storyService;
     }
 
     @GetMapping(path = "/getAll")
-    public ResponseEntity<List<Story>> getAllStories(){
+    public ResponseEntity<List<Story>> getAllStories() {
         return ResponseEntity.ok(storyService.getAll());
     }
 
     @GetMapping(path = "/getById/{id}")
-    public ResponseEntity<Story> getStoryById(@PathVariable Long id){
+    public ResponseEntity<Story> getStoryById(@PathVariable Long id) {
         return ResponseEntity.ok(storyService.getById(id));
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Story> createNewStory(@RequestBody @Valid StoryPostRequestBody story){
+    public ResponseEntity<Story> createNewStory(@RequestBody @Valid StoryPostRequestBody story) {
         return ResponseEntity.ok(storyService.createStory(story));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Void> updateStory(@RequestBody @Valid StoryPutRequestBody story){
+    public ResponseEntity<Void> updateStory(@RequestBody @Valid StoryPutRequestBody story) {
         storyService.replace(story);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public void deleteStory(@PathVariable Long id){
+    public void deleteStory(@PathVariable Long id) {
         storyService.deleteStoryById(id);
     }
 

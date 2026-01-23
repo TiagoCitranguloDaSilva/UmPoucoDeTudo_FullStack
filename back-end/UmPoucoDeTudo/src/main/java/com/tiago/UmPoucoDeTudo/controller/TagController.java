@@ -25,35 +25,36 @@ import jakarta.validation.Valid;
 @RequestMapping("/tags")
 @CrossOrigin(origins = "http://localhost:5173")
 public class TagController {
-    
+
     private final TagService tagService;
-    public TagController(TagService tagService){
+
+    public TagController(TagService tagService) {
         this.tagService = tagService;
     }
 
     @GetMapping(path = "/getAll")
-    public ResponseEntity<List<Tag>> getAllTags(){
+    public ResponseEntity<List<Tag>> getAllTags() {
         return ResponseEntity.ok(tagService.getAll());
     }
 
     @GetMapping(path = "/getById/{id}")
-    public ResponseEntity<Tag> getTagById(@PathVariable Long id){
+    public ResponseEntity<Tag> getTagById(@PathVariable Long id) {
         return ResponseEntity.ok(tagService.getById(id));
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Tag> createNewTag(@RequestBody @Valid TagPostRequestBody tag){
+    public ResponseEntity<Tag> createNewTag(@RequestBody @Valid TagPostRequestBody tag) {
         return ResponseEntity.ok(tagService.createTag(tag));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Void> updateTag(@RequestBody @Valid TagPutRequestBody tag){
+    public ResponseEntity<Void> updateTag(@RequestBody @Valid TagPutRequestBody tag) {
         tagService.replace(tag);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public void deleteTag(@PathVariable Long id){
+    public void deleteTag(@PathVariable Long id) {
         tagService.deleteTagById(id);
     }
 
