@@ -1,6 +1,5 @@
 package com.tiago.UmPoucoDeTudo.config;
 
-import com.tiago.UmPoucoDeTudo.repository.UserRepository;
 import com.tiago.UmPoucoDeTudo.service.AuthService;
 import com.tiago.UmPoucoDeTudo.service.TokenService;
 import jakarta.servlet.FilterChain;
@@ -28,9 +27,9 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
-        if(token != null){
-            var username = tokenService.validateToken(token);
-            UserDetails user = authService.loadUserByUsername(username);
+        if (token != null) {
+            var login = tokenService.validateToken(token);
+            UserDetails user = authService.loadUserByUsername(login);
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
@@ -39,9 +38,9 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String recoverToken(HttpServletRequest request){
+    private String recoverToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
-        if(authHeader == null) return null;
+        if (authHeader == null) return null;
         return authHeader.replace("Bearer ", "");
     }
 }
