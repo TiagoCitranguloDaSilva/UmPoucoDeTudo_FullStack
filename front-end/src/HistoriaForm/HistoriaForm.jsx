@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import "./HistoriaForm.css"
-import doFetch from '../util/fetchModel'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import doFetch from '../util/fetchModel'
+import "./HistoriaForm.css"
 
-function HistoriaForm({ aoEnviar, idHistoria }) {
+function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
 
     const [nomeHistoria, setNomeHistoria] = useState("")
     const [historia, setHistoria] = useState("")
@@ -12,10 +12,18 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
     const [etiquetas, setEtiquetas] = useState([])
     const [dataFormatada, setDataFormatada] = useState(null)
 
+    const [mensagemConfirmacaoVisivel, setMensagemConfirmacaoVisivel] = useState(false)
+
     const navigate = useNavigate()
 
+    const btnApagarVisivel = useRef(false)
+    const inputTitulo = useRef()
 
     useEffect(() => {
+
+        if (!visivel) return;
+
+        inputTitulo.current.focus()
 
         const doRequest = async () => {
             const request = await doFetch(navigate, `http://localhost:8080/tags/getAll`)
@@ -28,7 +36,6 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
         doRequest()
 
         if (idHistoria != -1) {
-            document.querySelector("#formHistoria .buttonApagar").style.display = 'block'
 
             const doRequest = async () => {
                 const request = await doFetch(navigate, `http://localhost:8080/stories/getById/${idHistoria}`)
@@ -45,10 +52,16 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
 
             doRequest()
 
+            if (btnApagarVisivel.current.classList.contains('hidden')) {
+                btnApagarVisivel.current.classList.remove('hidden')
+            }
+
         } else {
-            document.querySelector("#formHistoria .buttonApagar").style.display = 'none'
+            if (!btnApagarVisivel.current.classList.contains('hidden')) {
+                btnApagarVisivel.current.classList.add('hidden')
+            }
         }
-    }, [idHistoria])
+    }, [idHistoria, visivel])
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -91,24 +104,11 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
     }
 
     const fecharFormulario = () => {
-        document.querySelector("#formHistoria").style.display = "none"
-        document.body.style.overflowY = "auto"
         setNomeHistoria("")
         setHistoria("")
         setEscolha(0)
         setDataHistoria(null)
-    }
-
-    const mostrarConfirmacao = () => {
-        if (document.querySelector("#formHistoria .msgConfirmacao").classList.contains("hidden")) {
-            document.querySelector("#formHistoria .msgConfirmacao").classList.remove("hidden")
-        } else {
-            document.querySelector("#formHistoria .msgConfirmacao").classList.add("hidden")
-        }
-    }
-
-    const handleCancelDelete = () => {
-        mostrarConfirmacao()
+        fecharForm(false)
     }
 
     const handleDeleteEtiqueta = async (e) => {
@@ -116,7 +116,7 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
 
         const request = await doFetch(navigate, `http://localhost:8080/stories/delete/${idHistoria}`, "DELETE")
         if (request) {
-            mostrarConfirmacao()
+            setMensagemConfirmacaoVisivel(false)
             fecharFormulario()
             aoEnviar("História apagada!")
         }
@@ -124,12 +124,12 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
     }
 
     return (
-        <div id="formHistoria">
+        <div id="formHistoria" className={(visivel) ? "" : "hidden"}>
             <form onSubmit={handleSubmit} autoComplete='off' id='formPrincipalHistoria'>
-                <button onClick={fecharFormulario} id='fecharFormulario'>Voltar</button>
+                <button onClick={fecharFormulario} id='fecharFormulario' type='button'>Voltar</button>
                 <h2>Nova história</h2>
                 <div>
-                    <p><label htmlFor="tituloHistoria">Titulo: </label><input type="text" id="tituloHistoria" required placeholder="Nome da história" value={nomeHistoria} onChange={(e) => { setNomeHistoria(e.target.value) }} /></p>
+                    <p><label htmlFor="tituloHistoria">Titulo: </label><input type="text" id="tituloHistoria" required placeholder="Nome da história" value={nomeHistoria} onChange={(e) => { setNomeHistoria(e.target.value) }} ref={inputTitulo} /></p>
                     <p>
                         <label htmlFor="escolhaEtiqueta">Etiqueta: </label>
                         <select id="escolhaEtiqueta" onChange={(e) => setEscolha(e.target.value)} value={escolha}>
@@ -142,21 +142,21 @@ function HistoriaForm({ aoEnviar, idHistoria }) {
                 <p><label htmlFor="historiaTextArea">História: </label><textarea id="historiaTextArea" onChange={(e) => setHistoria(e.target.value)} value={historia} placeholder='Conte sua história...'></textarea></p>
                 <div className='botoes'>
                     <input type="submit" value="Salvar" />
-                    <button className='buttonApagar' onClick={
+                    <button className='buttonApagar' ref={btnApagarVisivel} onClick={
                         (e) => {
                             e.preventDefault()
-                            mostrarConfirmacao()
+                            setMensagemConfirmacaoVisivel(true)
                         }
                     }>Apagar</button>
 
                 </div>
                 {(dataFormatada != null) ? <div id="dataHistoria">Data de criação: {dataFormatada}</div> : null}
             </form>
-            <div className='hidden msgConfirmacao'>
+            <div className={(mensagemConfirmacaoVisivel) ? 'msgConfirmacao' : 'hidden msgConfirmacao'}>
                 <form className='formMsgConfirmacao' onSubmit={(e) => handleDeleteEtiqueta(e)}>
                     <p>Deseja apagar permanentemente esta história?</p>
                     <div className="botoes">
-                        <button type="button" onClick={handleCancelDelete}>Cancelar</button>
+                        <button type="button" onClick={(e) => setMensagemConfirmacaoVisivel(false)}>Cancelar</button>
                         <input type="submit" value="Apagar" />
                     </div>
                 </form>

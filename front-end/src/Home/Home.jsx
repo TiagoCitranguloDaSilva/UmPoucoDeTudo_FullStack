@@ -1,22 +1,23 @@
 
-import React, { useState, useEffect } from 'react'
-import EtiquetaForm from "../EtiquetaForm/EtiquetaForm"
-import HistoriaForm from "../HistoriaForm/HistoriaForm"
-import Grafico from "../Grafico/Grafico.jsx"
-import botaoGrafico from '../assets/botaoGrafico.png'
-import Mensagem from '../Mensagem/Mensagem.jsx'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import botaoGrafico from '../assets/botaoGrafico.png'
+import EtiquetaForm from "../EtiquetaForm/EtiquetaForm"
+import Grafico from "../Grafico/Grafico.jsx"
+import HistoriaForm from "../HistoriaForm/HistoriaForm"
+import Mensagem from '../Mensagem/Mensagem.jsx'
 
 import doFetch from '../util/fetchModel.js'
 
 function Home() {
-
 
   const [etiquetas, setEtiquetas] = useState([])
   const [idEtiqueta, setIdEtiqueta] = useState(-1)
 
   const [historias, setHistorias] = useState([])
   const [idHistoria, setIdHistoria] = useState(-1)
+
+  const [formHistoriaVisivel, setFormHistoriaVisivel] = useState(false)
 
   const [graficoVisivel, setGraficoVisivel] = useState(false)
 
@@ -41,9 +42,7 @@ function Home() {
     if (id != -1) {
       setIdHistoria(id)
     }
-    document.querySelector("#formHistoria").style.display = "flex"
-    document.body.style.overflowY = "hidden"
-    document.querySelector("#tituloHistoria").focus()
+    setFormHistoriaVisivel(true)
   }
 
   const handleEtiqueta = (msg) => {
@@ -55,6 +54,8 @@ function Home() {
   }
 
   const handleHistoria = (msg) => {
+
+    setFormHistoriaVisivel(false)
 
     setIdHistoria(-1)
 
@@ -126,6 +127,10 @@ function Home() {
     let responseHistorias = await doFetch(navigate, "http://localhost:8080/stories/getAll")
     if (responseHistorias) {
 
+      if (responseHistorias === true) {
+        setHistorias("")
+        return;
+      }
 
       const agrupado = responseHistorias.reduce((tag, historia) => {
         const tagId = historia.tag.id;
@@ -204,7 +209,7 @@ function Home() {
       </div>
 
       <EtiquetaForm aoEnviar={handleEtiqueta} idEtiqueta={idEtiqueta} />
-      <HistoriaForm aoEnviar={handleHistoria} idHistoria={idHistoria} />
+      <HistoriaForm aoEnviar={handleHistoria} idHistoria={idHistoria} visivel={formHistoriaVisivel} fecharForm={setFormHistoriaVisivel} />
 
     </>
   )
