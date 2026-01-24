@@ -1,6 +1,4 @@
-
-
-.mensagem{
+.mensagem {
     position: fixed;
     top: 0;
     left: 50%;
@@ -15,7 +13,6 @@
     max-width: 90%;
     text-align: center;
     font-size: 1.4rem;
-    background-color: #56f85e;
     color: #313131;
     font-weight: bold;
     border-radius: 0 0 10px 10px;
@@ -23,7 +20,15 @@
     z-index: 5;
 }
 
-.mensagem.hidden{
+.sucesso {
+    background-color: #56f85e;
+}
+
+.falha {
+    background-color: #f85656;
+}
+
+.mensagem.hidden {
     display: flex !important;
     transform: translateX(-50%) scaleY(0);
 }
