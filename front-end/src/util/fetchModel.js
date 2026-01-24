@@ -44,6 +44,8 @@ async function doFetch(onRedirect, rota, metodo = "get", body = null, headersExt
 
         if (!needToBeAuthenticated) return null
 
+        const mensagem = ["Sessão expirada!", true]
+        sessionStorage.setItem("mensagem", JSON.stringify(mensagem))
         onRedirect("/UmPoucoDeTudo/login")
         return null
     }

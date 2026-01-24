@@ -1,8 +1,8 @@
 
-import "./RegisterPage.css"
-import React, { useState } from 'react'
-import doFetch from "../util/fetchModel"
+import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
+import doFetch from "../util/fetchModel"
+import "./RegisterPage.css"
 
 function LoginPage() {
 
@@ -24,6 +24,8 @@ function LoginPage() {
             }, {}, false)
 
             if (response) {
+                const mensagem = ["Cadastro realizado!", false]
+                sessionStorage.setItem("mensagem", JSON.stringify(mensagem))
                 navigate("/UmPoucoDeTudo/login")
             }
         }

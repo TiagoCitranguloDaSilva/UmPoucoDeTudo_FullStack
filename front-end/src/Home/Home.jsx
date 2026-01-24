@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import botaoGrafico from '../assets/botaoGrafico.png'
 import EtiquetaForm from "../EtiquetaForm/EtiquetaForm"
@@ -24,9 +24,15 @@ function Home() {
   const [textoMensagem, setTextoMensagem] = useState(null)
   const [textoMensagemVisivel, setTextoMensagemVisivel] = useState(false)
 
+  const jaRodou = useRef(false)
+
   const navigate = useNavigate()
 
   useEffect(() => {
+
+    if (jaRodou.current) return;
+    jaRodou.current = true
+
     updateAll()
   }, [])
 
