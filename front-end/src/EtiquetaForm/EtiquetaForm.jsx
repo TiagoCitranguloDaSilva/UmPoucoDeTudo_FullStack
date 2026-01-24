@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import "./EtiquetaForm.css"
-import doFch from '../util/fetchModel'
+import doFetch from '../util/fetchModel'
 import { useNavigate } from 'react-router-dom'
 
 function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {

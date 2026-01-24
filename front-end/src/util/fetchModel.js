@@ -22,7 +22,6 @@ async function doFetch(onRedirect, rota, metodo = "get", body = null, headersExt
 
     if (body) {
         body = JSON.stringify(body)
-        console.log(body)
         headers["Content-Type"] = "application/json"
     }
 

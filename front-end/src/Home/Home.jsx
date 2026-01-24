@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import EtiquetaForm from "../EtiquetaForm/EtiquetaForm"
 import HistoriaForm from "../HistoriaForm/HistoriaForm"
-import Grafico from "../grafico/Grafico.jsx"
+import Grafico from "../Grafico/Grafico.jsx"
 import botaoGrafico from '../assets/botaoGrafico.png'
 import Mensagem from '../Mensagem/Mensagem.jsx'
 import { useNavigate } from 'react-router-dom'
@@ -148,7 +148,7 @@ function Home() {
       <button id="graficoButton" onClick={showGraficoPopUp}>
         <img src={botaoGrafico} alt="" />
       </button>
-      <Grafico visivel={graficoVisivel} />
+      <Grafico visivel={graficoVisivel} etiquetas={etiquetas} historias={historias} />
       <div id="etiquetas">
         <div className="headerContainer">
           <h2>Etiquetas</h2>
