@@ -22,6 +22,9 @@ function LoginPage() {
             sessionStorage.setItem("mensagem", "")
             let mensagemJson = JSON.parse(mensagem)
             mostrarMensagem(mensagemJson[0], mensagemJson[1])
+            if (mensagemJson[1]) {
+                localStorage.setItem("userToken", "")
+            }
         }
 
     }, [])

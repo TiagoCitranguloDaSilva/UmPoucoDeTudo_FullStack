@@ -27,6 +27,9 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
 
         const doRequest = async () => {
             const request = await doFetch(`http://localhost:8080/tags/getAll`)
+
+            if (checkHttpStatusRequest(request) == null) return
+
             if (request.httpStatusCode == 200) {
                 let etiquetasJson = JSON.parse(request.data)
                 setEtiquetas(etiquetasJson)
@@ -40,6 +43,9 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
 
             const doRequest = async () => {
                 const request = await doFetch(`http://localhost:8080/stories/getById/${idHistoria}`)
+
+                if (checkHttpStatusRequest(request) == null) return
+
                 if (request.httpStatusCode == 200) {
                     let historiaJson = JSON.parse(request.data)
                     setNomeHistoria(historiaJson.title)
@@ -95,6 +101,9 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
 
         const doRequest = async () => {
             const request = await doFetch(rota, metodo, corpo)
+
+            if (checkHttpStatusRequest(request) == null) return
+
             if (request.httpStatusCode == 201 || request.httpStatusCode == 200) {
                 fecharFormulario()
                 aoEnviar("História salva!")
@@ -117,11 +126,31 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
         e.preventDefault()
 
         const request = await doFetch(`http://localhost:8080/stories/delete/${idHistoria}`, "DELETE")
+
+        if (checkHttpStatusRequest(request) == null) return
+
         if (request.httpStatusCode == 200) {
             setMensagemConfirmacaoVisivel(false)
             fecharFormulario()
             aoEnviar("História apagada!")
         }
+
+    }
+
+    const checkHttpStatusRequest = (response) => {
+
+        if (response.httpStatusCode == 401) {
+            sessionStorage.setItem("mensagem", JSON.stringify([response.data, response.failed]))
+            navigate("/UmPoucoDeTudo/login")
+            return null
+        }
+
+        if (response.httpStatusCode == 403) {
+            navigate("/UmPoucoDeTudo/login")
+            return null
+        }
+
+        return response
 
     }
 

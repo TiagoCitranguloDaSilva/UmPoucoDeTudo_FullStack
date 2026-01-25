@@ -6,6 +6,14 @@ async function doFetch(rota, metodo = "get", body = null, headersExtras, needToB
 
     let token = localStorage.getItem("userToken")
 
+    if (needToBeAuthenticated && !token) {
+        return {
+            data: "",
+            httpStatusCode: 403,
+            failed: true
+        };
+    }
+
     let headers = {
         ...headersExtras
     }

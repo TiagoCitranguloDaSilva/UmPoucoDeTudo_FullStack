@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import doFetch from '../util/fetchModel'
 import "./EtiquetaForm.css"
 
@@ -14,6 +15,8 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta, visivel, fecharForm }) {
 
     const nomeInputRef = useRef()
 
+    const navigate = useNavigate()
+
     useEffect(() => {
         if (idEtiqueta != -1) {
             setEditBool(true)
@@ -21,6 +24,9 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta, visivel, fecharForm }) {
 
             const carregarDados = async () => {
                 const responseEtiqueta = await doFetch(`http://localhost:8080/tags/getById/${idEtiqueta}`)
+
+                if (checkHttpStatusRequest(responseEtiqueta) == null) return
+
                 if (responseEtiqueta.httpStatusCode == 200) {
                     let dados = JSON.parse(responseEtiqueta.data)
                     setNomeEtiqueta(dados.name)
@@ -72,6 +78,9 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta, visivel, fecharForm }) {
 
         const doRequest = async () => {
             const request = await doFetch(rota, metodo, corpo)
+
+            if (checkHttpStatusRequest(request) == null) return
+
             if (request.httpStatusCode == 201 || request.httpStatusCode == 200) {
                 fecharFormulario()
                 aoEnviar("Etiqueta salva!")
@@ -88,16 +97,35 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta, visivel, fecharForm }) {
         fecharForm(false)
     }
 
-
     const handleDeleteEtiqueta = async (e) => {
         e.preventDefault()
 
         const request = await doFetch(`http://localhost:8080/tags/delete/${idEtiqueta}`, "DELETE")
+
+        if (checkHttpStatusRequest(request) == null) return
+
         if (request.httpStatusCode == 200) {
             setMsgConfirmacaoVisivel(false)
             fecharFormulario()
             aoEnviar("Etiqueta apagada!")
         }
+
+    }
+
+    const checkHttpStatusRequest = (response) => {
+
+        if (response.httpStatusCode == 401) {
+            sessionStorage.setItem("mensagem", JSON.stringify([response.data, response.failed]))
+            navigate("/UmPoucoDeTudo/login")
+            return null
+        }
+
+        if (response.httpStatusCode == 403) {
+            navigate("/UmPoucoDeTudo/login")
+            return null
+        }
+
+        return response
 
     }
 

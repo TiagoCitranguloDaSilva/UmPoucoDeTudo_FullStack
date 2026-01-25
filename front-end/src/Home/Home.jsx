@@ -144,6 +144,11 @@ function Home() {
       return
     }
 
+    if (responseEtiquetas.httpStatusCode == 403) {
+      navigate("/UmPoucoDeTudo/login")
+      return
+    }
+
     if (responseEtiquetas.httpStatusCode == 200) {
       setEtiquetas(JSON.parse(responseEtiquetas.data))
     }
