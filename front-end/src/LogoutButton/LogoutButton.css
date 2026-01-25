@@ -13,6 +13,7 @@
     transition: transform .3s;
     cursor: pointer;
     z-index: 2;
+    user-select: none;
 }
 
 #logoutButton:hover {
@@ -23,4 +24,5 @@
     width: 95%;
     height: 95%;
     padding: .2em;
+    pointer-events: none;
 }
