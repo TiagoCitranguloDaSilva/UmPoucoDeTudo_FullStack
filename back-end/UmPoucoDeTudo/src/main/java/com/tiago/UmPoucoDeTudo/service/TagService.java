@@ -3,10 +3,12 @@ package com.tiago.UmPoucoDeTudo.service;
 import com.tiago.UmPoucoDeTudo.model.Tag;
 import com.tiago.UmPoucoDeTudo.model.User;
 import com.tiago.UmPoucoDeTudo.repository.TagRepository;
+import com.tiago.UmPoucoDeTudo.repository.UserRepository;
 import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPostRequestBody;
 import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPutRequestBody;
 import com.tiago.UmPoucoDeTudo.responses.TagResponse;
 import com.tiago.UmPoucoDeTudo.responses.UserResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,9 +22,12 @@ public class TagService {
 
     private final StoryService storyService;
 
-    public TagService(TagRepository tagRepository, StoryService storyService) {
+    private final UserRepository userRepository;
+
+    public TagService(TagRepository tagRepository, StoryService storyService, UserRepository userRepository) {
         this.tagRepository = tagRepository;
         this.storyService = storyService;
+        this.userRepository = userRepository;
     }
 
     public List<TagResponse> getAll(User user) {
@@ -49,6 +54,10 @@ public class TagService {
         );
     }
 
+    public Tag getByIdReturnTag(Long id, User user) {
+        return tagRepository.findByIdAndUser(id, user).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Etiqueta não encontrada!"));
+    }
+
     public TagResponse createTag(TagPostRequestBody requestTag, User user) {
         Tag tag = Tag.builder()
                 .name(requestTag.getName())
@@ -59,14 +68,14 @@ public class TagService {
                 tag.getId(),
                 tag.getName(),
                 tag.getCreated_at(),
-                tag.getStories().stream().map(storyService::toDTO).toList(),
+                null,
                 new UserResponse(tag.getUser().getName())
         );
     }
 
     public void replace(TagPutRequestBody requestTag, User user) {
 
-        getById(requestTag.getId(), user);
+        getByIdReturnTag(requestTag.getId(), user);
 
         Tag tag = Tag.builder()
                 .id(requestTag.getId())
@@ -77,11 +86,15 @@ public class TagService {
         tagRepository.save(tag);
     }
 
+    @Transactional
     public void deleteTagById(Long id, User user) {
 
-        getById(id, user);
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        tagRepository.deleteById(id);
+        Tag tag = getByIdReturnTag(id, managedUser);
+        managedUser.getTags().remove(tag);
+
     }
 
 
