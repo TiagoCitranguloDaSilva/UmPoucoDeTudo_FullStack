@@ -23,6 +23,7 @@ function Home() {
 
   const [textoMensagem, setTextoMensagem] = useState(null)
   const [textoMensagemVisivel, setTextoMensagemVisivel] = useState(false)
+  const [mensagemFailed, setMensagemFailed] = useState(false)
 
   const jaRodou = useRef(false)
 
@@ -32,6 +33,13 @@ function Home() {
 
     if (jaRodou.current) return;
     jaRodou.current = true
+
+    let mensagem = sessionStorage.getItem("mensagem")
+
+    if (mensagem) {
+      sessionStorage.setItem("mensagem", "")
+      mostrarMensagem(JSON.parse(mensagem))
+    }
 
     updateAll()
   }, [])
@@ -111,10 +119,11 @@ function Home() {
     }
   }
 
-  function mostrarMensagem(texto) {
+  function mostrarMensagem(texto, failed = false) {
 
     setTextoMensagem(texto)
     setTextoMensagemVisivel(true)
+    setMensagemFailed(failed)
 
   }
 
@@ -127,18 +136,35 @@ function Home() {
 
   const updateAll = async () => {
 
-    let responseEtiquetas = await doFetch(navigate, "http://localhost:8080/tags/getAll")
-    if (responseEtiquetas) setEtiquetas(responseEtiquetas)
+    let responseEtiquetas = await doFetch("http://localhost:8080/tags/getAll")
 
-    let responseHistorias = await doFetch(navigate, "http://localhost:8080/stories/getAll")
-    if (responseHistorias) {
+    if (responseEtiquetas.httpStatusCode == 401) {
+      sessionStorage.setItem("mensagem", JSON.stringify([responseEtiquetas.data, responseEtiquetas.failed]))
+      navigate("/UmPoucoDeTudo/login")
+      return
+    }
 
-      if (responseHistorias === true) {
+    if (responseEtiquetas.httpStatusCode == 200) {
+      setEtiquetas(JSON.parse(responseEtiquetas.data))
+    }
+
+    let responseHistorias = await doFetch("http://localhost:8080/stories/getAll")
+
+    if (responseHistorias.httpStatusCode == 401) {
+      sessionStorage.setItem("mensagem", JSON.stringify([responseHistorias.data, responseHistorias.failed]))
+      navigate("/UmPoucoDeTudo/login")
+      return
+    }
+
+    if (responseHistorias.httpStatusCode == 200) {
+      if (responseHistorias.data == "") {
         setHistorias("")
         return;
       }
 
-      const agrupado = responseHistorias.reduce((tag, historia) => {
+      let tempHistorias = JSON.parse(responseHistorias.data)
+
+      const agrupado = tempHistorias.reduce((tag, historia) => {
         const tagId = historia.tag.id;
         if (!tag[tagId]) {
           tag[tagId] = [];
@@ -154,7 +180,7 @@ function Home() {
   return (
     <>
 
-      <Mensagem texto={textoMensagem} visivel={textoMensagemVisivel} estado={colherEstado} />
+      <Mensagem texto={textoMensagem} visivel={textoMensagemVisivel} estado={colherEstado} failed={mensagemFailed} />
       <h1>Um Pouco de Tudo</h1>
       <button id="graficoButton" onClick={showGraficoPopUp}>
         <img src={botaoGrafico} alt="" />

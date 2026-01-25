@@ -1,6 +1,7 @@
 
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
+import Mensagem from '../Mensagem/Mensagem'
 import doFetch from "../util/fetchModel"
 import "./RegisterPage.css"
 
@@ -10,6 +11,11 @@ function LoginPage() {
     const [password, setPassword] = useState("")
     const [email, setEmail] = useState("")
 
+    const [textoMensagem, setTextoMensagem] = useState(null)
+    const [mensagemVisivel, setMensagemVisivel] = useState(false)
+    const [mensagemFalha, setMensagemFalha] = useState(false)
+
+
     const navigate = useNavigate()
 
     const handleSubmit = (e) => {
@@ -17,16 +23,20 @@ function LoginPage() {
         e.preventDefault()
 
         const doRequest = async () => {
-            const response = await doFetch(null, "http://localhost:8080/auth/register", "POST", {
+            const response = await doFetch("http://localhost:8080/auth/register", "POST", {
                 "email": email,
                 "name": name,
                 "password": password
             }, {}, false)
 
-            if (response) {
-                const mensagem = ["Cadastro realizado!", false]
+            if (response.httpStatusCode == 201) {
+                const mensagem = [response.data, false]
                 sessionStorage.setItem("mensagem", JSON.stringify(mensagem))
                 navigate("/UmPoucoDeTudo/login")
+            } else {
+                setTextoMensagem(response.data)
+                setMensagemFalha(response.failed)
+                setMensagemVisivel(true)
             }
         }
 
@@ -34,8 +44,18 @@ function LoginPage() {
 
     }
 
+    const colherEstado = (estado) => {
+
+        if (estado) {
+            setMensagemVisivel(false)
+            setTextoMensagem(null)
+        }
+
+    }
+
     return (
         <div id="registerContainer">
+            <Mensagem texto={textoMensagem} visivel={mensagemVisivel} falha={mensagemFalha} estado={colherEstado} />
             <div id="registerForm">
                 <h1>Cadastro</h1>
                 <form autoComplete="off" onSubmit={handleSubmit}>

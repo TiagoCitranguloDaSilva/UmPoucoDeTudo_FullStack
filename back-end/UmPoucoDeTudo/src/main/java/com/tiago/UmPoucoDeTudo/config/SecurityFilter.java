@@ -1,5 +1,6 @@
 package com.tiago.UmPoucoDeTudo.config;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.tiago.UmPoucoDeTudo.service.AuthService;
 import com.tiago.UmPoucoDeTudo.service.TokenService;
 import jakarta.servlet.FilterChain;
@@ -28,12 +29,19 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
         if (token != null) {
-            var login = tokenService.validateToken(token);
-            UserDetails user = authService.loadUserByUsername(login);
+            try {
+                var login = tokenService.validateToken(token);
+                UserDetails user = authService.loadUserByUsername(login);
 
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (TokenExpiredException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("text/plain; charset=UTF-8");
+                response.getWriter().write("Sessão expirada!");
+                return;
+            }
         }
         filterChain.doFilter(request, response);
     }

@@ -8,6 +8,7 @@ import com.tiago.UmPoucoDeTudo.service.AuthService;
 import com.tiago.UmPoucoDeTudo.service.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,22 +38,27 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid RegisterRequest request) {
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já cadastrado");
+        }
+
         userRepository.save(User.builder()
                 .email(request.getEmail())
                 .name(request.getName())
                 .password(encryptedPassword)
                 .build());
-        return ResponseEntity.ok("Usuário criado!");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso!");
     }
 
     @PostMapping(path = "/login")
     public ResponseEntity<String> login(@RequestBody @Valid LoginRequest request) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
-        System.out.println("Teste");
+
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generateToken((User) auth.getPrincipal());
-
         return ResponseEntity.ok(token);
+
     }
 
 }

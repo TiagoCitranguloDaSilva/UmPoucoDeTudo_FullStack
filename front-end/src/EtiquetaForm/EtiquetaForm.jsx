@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import "./EtiquetaForm.css"
-import doFetch from '../util/fetchModel'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import doFetch from '../util/fetchModel'
+import "./EtiquetaForm.css"
 
 function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
 
@@ -18,12 +18,13 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
             document.querySelector(".buttonApagar").style.display = 'block'
 
             const carregarDados = async () => {
-                const responseEtiqueta = await doFetch(navigate, `http://localhost:8080/tags/getById/${idEtiqueta}`)
-                if (responseEtiqueta) {
-                    setNomeEtiqueta(responseEtiqueta.name)
-                    setDataEtiqueta(responseEtiqueta.created_at)
+                const responseEtiqueta = await doFetch(`http://localhost:8080/tags/getById/${idEtiqueta}`)
+                if (responseEtiqueta.httpStatusCode == 200) {
+                    let dados = JSON.parse(responseEtiqueta.data)
+                    setNomeEtiqueta(dados.name)
+                    setDataEtiqueta(dados.created_at)
 
-                    const date = (responseEtiqueta.created_at).split("-")
+                    const date = (dados.created_at).split("-")
                     setDataEtiquetaFormatada(`${date[2]}/${date[1]}/${date[0]}`)
                 }
             }
@@ -62,8 +63,8 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
         }
 
         const doRequest = async () => {
-            const request = await doFetch(navigate, rota, metodo, corpo)
-            if (request) {
+            const request = await doFetch(rota, metodo, corpo)
+            if (request.httpStatusCode == 201 || request.httpStatusCode == 200) {
                 fecharFormulario()
                 aoEnviar("Etiqueta salva!")
             }
@@ -95,8 +96,8 @@ function NovaEtiquetaForm({ aoEnviar, idEtiqueta }) {
     const handleDeleteEtiqueta = async (e) => {
         e.preventDefault()
 
-        const request = await doFetch(navigate, `http://localhost:8080/tags/delete/${idEtiqueta}`, "DELETE")
-        if (request) {
+        const request = await doFetch(`http://localhost:8080/tags/delete/${idEtiqueta}`, "DELETE")
+        if (request.httpStatusCode == 200) {
             mostrarConfirmacao()
             fecharFormulario()
             aoEnviar("Etiqueta apagada!")

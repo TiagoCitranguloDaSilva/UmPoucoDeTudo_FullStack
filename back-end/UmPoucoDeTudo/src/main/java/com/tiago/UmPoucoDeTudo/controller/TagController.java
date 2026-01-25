@@ -44,18 +44,19 @@ public class TagController {
 
     @PostMapping(path = "/new")
     public ResponseEntity<Tag> createNewTag(@RequestBody @Valid TagPostRequestBody tag) {
-        return ResponseEntity.ok(tagService.createTag(tag));
+        return ResponseEntity.status(HttpStatus.CREATED).body(tagService.createTag(tag));
     }
 
     @PutMapping(path = "/update")
     public ResponseEntity<Void> updateTag(@RequestBody @Valid TagPutRequestBody tag) {
         tagService.replace(tag);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public void deleteTag(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTagById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
 }

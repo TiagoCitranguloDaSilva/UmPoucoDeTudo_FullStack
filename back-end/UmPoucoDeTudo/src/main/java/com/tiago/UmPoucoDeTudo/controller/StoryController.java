@@ -44,18 +44,19 @@ public class StoryController {
 
     @PostMapping(path = "/new")
     public ResponseEntity<Story> createNewStory(@RequestBody @Valid StoryPostRequestBody story) {
-        return ResponseEntity.ok(storyService.createStory(story));
+        return ResponseEntity.status(HttpStatus.CREATED).body(storyService.createStory(story));
     }
 
     @PutMapping(path = "/update")
     public ResponseEntity<Void> updateStory(@RequestBody @Valid StoryPutRequestBody story) {
         storyService.replace(story);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public void deleteStory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteStory(@PathVariable Long id) {
         storyService.deleteStoryById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
 }

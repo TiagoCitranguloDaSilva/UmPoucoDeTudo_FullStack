@@ -26,10 +26,11 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
         inputTitulo.current.focus()
 
         const doRequest = async () => {
-            const request = await doFetch(navigate, `http://localhost:8080/tags/getAll`)
-            if (request) {
-                setEtiquetas(request)
-                setEscolha(request[0].id)
+            const request = await doFetch(`http://localhost:8080/tags/getAll`)
+            if (request.httpStatusCode == 200) {
+                let etiquetasJson = JSON.parse(request.data)
+                setEtiquetas(etiquetasJson)
+                setEscolha(etiquetasJson[0].id)
             }
         }
 
@@ -38,14 +39,15 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
         if (idHistoria != -1) {
 
             const doRequest = async () => {
-                const request = await doFetch(navigate, `http://localhost:8080/stories/getById/${idHistoria}`)
-                if (request) {
-                    setNomeHistoria(request.title)
-                    setHistoria(request.story)
-                    setDataHistoria(request.created_at)
-                    setEscolha(request.tag.id)
+                const request = await doFetch(`http://localhost:8080/stories/getById/${idHistoria}`)
+                if (request.httpStatusCode == 200) {
+                    let historiaJson = JSON.parse(request.data)
+                    setNomeHistoria(historiaJson.title)
+                    setHistoria(historiaJson.story)
+                    setDataHistoria(historiaJson.created_at)
+                    setEscolha(historiaJson.tag.id)
 
-                    const date = (request.created_at).split("-")
+                    const date = (historiaJson.created_at).split("-")
                     setDataFormatada(`${date[2]}/${date[1]}/${date[0]}`)
                 }
             }
@@ -92,8 +94,8 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
         }
 
         const doRequest = async () => {
-            const request = await doFetch(navigate, rota, metodo, corpo)
-            if (request) {
+            const request = await doFetch(rota, metodo, corpo)
+            if (request.httpStatusCode == 201 || request.httpStatusCode == 200) {
                 fecharFormulario()
                 aoEnviar("História salva!")
             }
@@ -114,8 +116,8 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
     const handleDeleteEtiqueta = async (e) => {
         e.preventDefault()
 
-        const request = await doFetch(navigate, `http://localhost:8080/stories/delete/${idHistoria}`, "DELETE")
-        if (request) {
+        const request = await doFetch(`http://localhost:8080/stories/delete/${idHistoria}`, "DELETE")
+        if (request.httpStatusCode == 200) {
             setMensagemConfirmacaoVisivel(false)
             fecharFormulario()
             aoEnviar("História apagada!")

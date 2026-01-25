@@ -18,14 +18,12 @@ function LoginPage() {
 
     useEffect(() => {
         let mensagem = sessionStorage.getItem("mensagem")
-
         if (mensagem) {
-            mensagem = JSON.parse(mensagem)
             sessionStorage.setItem("mensagem", "")
-            setTextoMensagem(mensagem[0])
-            setMensagemFalha(mensagem[1])
-            setMensagemVisivel(true)
+            let mensagemJson = JSON.parse(mensagem)
+            mostrarMensagem(mensagemJson[0], mensagemJson[1])
         }
+
     }, [])
 
     const handleSubmit = (e) => {
@@ -33,19 +31,30 @@ function LoginPage() {
         e.preventDefault()
 
         const doRequest = async () => {
-            const response = await doFetch(null, "http://localhost:8080/auth/login", "POST", {
+            const response = await doFetch("http://localhost:8080/auth/login", "POST", {
                 "email": email,
                 "password": password
             }, {}, false)
 
-            if (response) {
-                localStorage.setItem("userToken", `Bearer ${response}`)
+            if (response.httpStatusCode == 200) {
+                localStorage.setItem("userToken", `Bearer ${response.data}`)
+                sessionStorage.setItem("mensagem", JSON.stringify(["Bem vindo de volta!", false]))
                 navigate("/UmPoucoDeTudo")
+            } else {
+                mostrarMensagem(response.data, response.failed)
             }
         }
 
         doRequest()
 
+    }
+
+    const mostrarMensagem = (mensagem = "", failed) => {
+        if (mensagem) {
+            setTextoMensagem(mensagem)
+            setMensagemFalha(failed)
+            setMensagemVisivel(true)
+        }
     }
 
     const coletarEstadoMensagem = (estado) => {
