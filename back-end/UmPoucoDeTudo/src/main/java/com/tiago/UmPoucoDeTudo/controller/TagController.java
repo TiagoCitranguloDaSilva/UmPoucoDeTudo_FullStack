@@ -1,25 +1,17 @@
 package com.tiago.UmPoucoDeTudo.controller;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.tiago.UmPoucoDeTudo.model.Tag;
+import com.tiago.UmPoucoDeTudo.model.User;
 import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPostRequestBody;
 import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPutRequestBody;
+import com.tiago.UmPoucoDeTudo.responses.TagResponse;
 import com.tiago.UmPoucoDeTudo.service.TagService;
-
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/tags")
@@ -33,29 +25,29 @@ public class TagController {
     }
 
     @GetMapping(path = "/getAll")
-    public ResponseEntity<List<Tag>> getAllTags() {
-        return ResponseEntity.ok(tagService.getAll());
+    public ResponseEntity<List<TagResponse>> getAllTags(Authentication authentication) {
+        return ResponseEntity.ok(tagService.getAll((User) authentication.getPrincipal()));
     }
 
     @GetMapping(path = "/getById/{id}")
-    public ResponseEntity<Tag> getTagById(@PathVariable Long id) {
-        return ResponseEntity.ok(tagService.getById(id));
+    public ResponseEntity<TagResponse> getTagById(@PathVariable Long id, Authentication authentication) {
+        return ResponseEntity.ok(tagService.getById(id, (User) authentication.getPrincipal()));
     }
 
     @PostMapping(path = "/new")
-    public ResponseEntity<Tag> createNewTag(@RequestBody @Valid TagPostRequestBody tag) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(tagService.createTag(tag));
+    public ResponseEntity<TagResponse> createNewTag(@RequestBody @Valid TagPostRequestBody tag, Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tagService.createTag(tag, (User) authentication.getPrincipal()));
     }
 
     @PutMapping(path = "/update")
-    public ResponseEntity<Void> updateTag(@RequestBody @Valid TagPutRequestBody tag) {
-        tagService.replace(tag);
+    public ResponseEntity<Void> updateTag(@RequestBody @Valid TagPutRequestBody tag, Authentication authentication) {
+        tagService.replace(tag, (User) authentication.getPrincipal());
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
-        tagService.deleteTagById(id);
+    public ResponseEntity<Void> deleteTag(@PathVariable Long id, Authentication authentication) {
+        tagService.deleteTagById(id, (User) authentication.getPrincipal());
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 

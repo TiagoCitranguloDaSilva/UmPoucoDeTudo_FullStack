@@ -148,33 +148,6 @@ function Home() {
       setEtiquetas(JSON.parse(responseEtiquetas.data))
     }
 
-    let responseHistorias = await doFetch("http://localhost:8080/stories/getAll")
-
-    if (responseHistorias.httpStatusCode == 401) {
-      sessionStorage.setItem("mensagem", JSON.stringify([responseHistorias.data, responseHistorias.failed]))
-      navigate("/UmPoucoDeTudo/login")
-      return
-    }
-
-    if (responseHistorias.httpStatusCode == 200) {
-      if (responseHistorias.data == "") {
-        setHistorias("")
-        return;
-      }
-
-      let tempHistorias = JSON.parse(responseHistorias.data)
-
-      const agrupado = tempHistorias.reduce((tag, historia) => {
-        const tagId = historia.tag.id;
-        if (!tag[tagId]) {
-          tag[tagId] = [];
-        }
-        tag[tagId].push(historia);
-        return tag;
-      }, {});
-      setHistorias(agrupado)
-    }
-
   }
 
   return (
@@ -221,7 +194,7 @@ function Home() {
                   <h2>{etiqueta.name}</h2>
                 </div>
                 <div className="historiasList collapsed">
-                  {(historias[etiqueta.id]?.length > 0) ? historias[etiqueta.id]?.map((historia) => {
+                  {(etiqueta.stories?.length > 0) ? etiqueta.stories?.map((historia) => {
                     return (
                       <div className="historia" key={historia.id} onClick={() => handleShowHistoriaForm(historia.id)}>
                         <p>{historia.title}</p>

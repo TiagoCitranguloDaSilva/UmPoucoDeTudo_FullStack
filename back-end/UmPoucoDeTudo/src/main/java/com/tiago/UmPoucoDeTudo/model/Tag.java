@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 @JsonIgnoreProperties("stories")
 public class Tag {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,5 +33,10 @@ public class Tag {
 
     @OneToMany(mappedBy = "tag", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Story> stories;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties("tags")
+    private User user;
 
 }
