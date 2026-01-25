@@ -6,7 +6,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    display: none;
     z-index: 4;
     top: 0;
 }
@@ -83,10 +82,6 @@
     background-color: #829ee0;
     color: white;
     border: 3px solid #6488dd;
-}
-
-#formEtiqueta .buttonApagar {
-    display: none;
 }
 
 #formEtiqueta #dataEtiqueta {

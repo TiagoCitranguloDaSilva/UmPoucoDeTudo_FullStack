@@ -17,6 +17,8 @@ function Home() {
   const [historias, setHistorias] = useState([])
   const [idHistoria, setIdHistoria] = useState(-1)
 
+  const [formEtiquetaVisivel, setFormEtiquetaVisivel] = useState(false)
+
   const [formHistoriaVisivel, setFormHistoriaVisivel] = useState(false)
 
   const [graficoVisivel, setGraficoVisivel] = useState(false)
@@ -46,9 +48,7 @@ function Home() {
 
   const handleShowEtiquetaForm = (id = -1) => {
     setIdEtiqueta(id)
-    document.querySelector("#formEtiqueta").style.display = "flex"
-    document.body.style.overflowY = "hidden"
-    document.querySelector("#nomeEtiqueta").focus()
+    setFormEtiquetaVisivel(true)
   }
 
   const handleShowHistoriaForm = (id = -1) => {
@@ -240,7 +240,7 @@ function Home() {
         </div>
       </div>
 
-      <EtiquetaForm aoEnviar={handleEtiqueta} idEtiqueta={idEtiqueta} />
+      <EtiquetaForm aoEnviar={handleEtiqueta} idEtiqueta={idEtiqueta} visivel={formEtiquetaVisivel} fecharForm={setFormEtiquetaVisivel} />
       <HistoriaForm aoEnviar={handleHistoria} idHistoria={idHistoria} visivel={formHistoriaVisivel} fecharForm={setFormHistoriaVisivel} />
 
     </>
