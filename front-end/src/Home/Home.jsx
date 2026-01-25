@@ -5,6 +5,7 @@ import botaoGrafico from '../assets/botaoGrafico.png'
 import EtiquetaForm from "../EtiquetaForm/EtiquetaForm"
 import Grafico from "../Grafico/Grafico.jsx"
 import HistoriaForm from "../HistoriaForm/HistoriaForm"
+import LogoutButton from '../LogoutButton/LogoutButton.jsx'
 import Mensagem from '../Mensagem/Mensagem.jsx'
 
 import doFetch from '../util/fetchModel.js'
@@ -163,6 +164,7 @@ function Home() {
       <button id="graficoButton" onClick={showGraficoPopUp}>
         <img src={botaoGrafico} alt="" />
       </button>
+      <LogoutButton />
       <Grafico visivel={graficoVisivel} etiquetas={etiquetas} historias={historias} />
       <div id="etiquetas">
         <div className="headerContainer">
