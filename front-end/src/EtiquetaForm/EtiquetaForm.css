@@ -1,3 +1,7 @@
+html:has(#formEtiqueta:not(.hidden)) {
+    overflow-y: hidden;
+}
+
 #formEtiqueta {
     position: fixed;
     backdrop-filter: blur(2px);
