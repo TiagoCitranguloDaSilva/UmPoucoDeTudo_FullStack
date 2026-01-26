@@ -1,5 +1,8 @@
+html:has(#grafico:not(.hidden)) {
+    overflow-y: hidden;
+}
 
-#grafico{
+#grafico {
     position: fixed;
     left: 0;
     right: 0;
@@ -14,13 +17,13 @@
     justify-content: center;
     justify-items: center;
 
-}   
+}
 
-#grafico h1{
+#grafico h1 {
     text-align: center;
 }
 
-#grafico > div{
+#grafico>div {
     width: 80%;
     height: 80%;
     display: flex;
@@ -28,18 +31,18 @@
     justify-content: center;
 }
 
-canvas{
+canvas {
     display: block;
 }
 
-#grafico.hidden{
+#grafico.hidden {
     display: none;
 }
 
-#grafico:not(.hidden){
+#grafico:not(.hidden) {
     display: grid;
 }
 
-#msgNaoHaDados h2{
+#msgNaoHaDados h2 {
     text-align: center;
 }
