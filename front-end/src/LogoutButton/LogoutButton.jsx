@@ -9,7 +9,7 @@ function LogoutButton() {
     const handleClick = () => {
         localStorage.setItem("userToken", "")
         sessionStorage.setItem("mensagem", JSON.stringify(["Você saiu da conta!", false]))
-        navigate("/UmPoucoDeTudo/Login")
+        navigate("/UmPoucoDeTudo/login")
     }
 
     return (
