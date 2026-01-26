@@ -25,6 +25,17 @@ function LoginPage() {
             if (mensagemJson[1]) {
                 localStorage.setItem("userToken", "")
             }
+        } else if (localStorage.getItem("userToken")) {
+            const doResponse = async () => {
+                const response = await doFetch("http://localhost:8080/auth/validate", "GET", null, null, true)
+                if (response.httpStatusCode == 200) {
+                    navigate("/UmPoucoDeTudo")
+                } else {
+                    localStorage.setItem("userToken", "")
+                }
+            }
+
+            doResponse()
         }
 
     }, [])

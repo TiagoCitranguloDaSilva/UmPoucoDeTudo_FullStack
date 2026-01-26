@@ -2,8 +2,6 @@
 
 async function doFetch(rota, metodo = "get", body = null, headersExtras, needToBeAuthenticated = true) {
 
-
-
     let token = localStorage.getItem("userToken")
 
     if (needToBeAuthenticated && !token) {
@@ -31,8 +29,8 @@ async function doFetch(rota, metodo = "get", body = null, headersExtras, needToB
 
     try {
         response = await fetch(rota, {
-            "method": metodo,
-            "body": body,
+            method: metodo,
+            body: body,
             headers: headers
         })
     } catch (exception) {
