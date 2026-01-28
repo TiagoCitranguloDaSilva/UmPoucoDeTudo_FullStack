@@ -51,7 +51,7 @@ function HistoriaForm({ aoEnviar, idHistoria, visivel, fecharForm }) {
                     setNomeHistoria(historiaJson.title)
                     setHistoria(historiaJson.story)
                     setDataHistoria(historiaJson.created_at)
-                    setEscolha(historiaJson.tag.id)
+                    setEscolha(historiaJson.tagId)
 
                     const date = (historiaJson.created_at).split("-")
                     setDataFormatada(`${date[2]}/${date[1]}/${date[0]}`)

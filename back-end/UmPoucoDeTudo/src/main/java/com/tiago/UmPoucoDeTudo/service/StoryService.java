@@ -67,7 +67,7 @@ public class StoryService {
     }
 
     public StoryResponse toDTO(Story story) {
-        return new StoryResponse(story.getId(), story.getTitle(), story.getStory(), story.getCreated_at());
+        return new StoryResponse(story.getId(), story.getTitle(), story.getStory(), story.getTag().getId(), story.getCreated_at());
     }
 
 }

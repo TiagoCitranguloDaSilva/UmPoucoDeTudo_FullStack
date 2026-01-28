@@ -5,10 +5,7 @@ import com.tiago.UmPoucoDeTudo.repository.UserRepository;
 import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPutRequestBody;
 import com.tiago.UmPoucoDeTudo.responses.StoryResponse;
 import com.tiago.UmPoucoDeTudo.service.StoryService;
-import com.tiago.UmPoucoDeTudo.util.StoryPostRequestBodyTesterCreator;
-import com.tiago.UmPoucoDeTudo.util.StoryPutRequestBodyTesterCreator;
-import com.tiago.UmPoucoDeTudo.util.StoryResponseTesterCreator;
-import com.tiago.UmPoucoDeTudo.util.StoryTesterCreator;
+import com.tiago.UmPoucoDeTudo.util.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +41,8 @@ public class StoryControllerTest {
     void getAllStories_ReturnAListOfStories_WhenSuccessful() {
 
         ArrayList<Story> storyList = new ArrayList<>();
-        storyList.add(StoryTesterCreator.createStory());
+        Story story = StoryTesterCreator.createStory(TagTesterCreator.createTagWithId());
+        storyList.add(story);
 
         BDDMockito.when(storyServiceMock.getAll())
                 .thenReturn(StoryResponseTesterCreator.convertToStoryResponse(storyList));
@@ -59,7 +57,7 @@ public class StoryControllerTest {
         Assertions.assertThat(stories.getFirst())
                 .isNotNull()
                 .usingRecursiveComparison()
-                .isEqualTo(StoryTesterCreator.createStory());
+                .isEqualTo(StoryResponseTesterCreator.convertToStoryResponse(story));
 
     }
 
@@ -67,15 +65,17 @@ public class StoryControllerTest {
     @DisplayName("Teste: teste do endpoint '/getById/{id}'")
     void getStoryById_ReturnStory_WhenSuccessful() {
 
+        Story story = StoryTesterCreator.createStory(TagTesterCreator.createTagWithId());
+
         BDDMockito.when(storyServiceMock.getById(StoryTesterCreator.getDefaultId()))
-                .thenReturn(StoryResponseTesterCreator.convertToStoryResponse(StoryTesterCreator.createStory()));
+                .thenReturn(StoryResponseTesterCreator.convertToStoryResponse(story));
 
-        StoryResponse story = storyController.getStoryById(StoryTesterCreator.getDefaultId()).getBody();
+        StoryResponse storyResponse = storyController.getStoryById(StoryTesterCreator.getDefaultId()).getBody();
 
-        Assertions.assertThat(story)
+        Assertions.assertThat(storyResponse)
                 .isNotNull()
                 .usingRecursiveComparison()
-                .isEqualTo(StoryTesterCreator.createStory());
+                .isEqualTo(StoryResponseTesterCreator.convertToStoryResponse(story));
 
 
     }
@@ -84,16 +84,18 @@ public class StoryControllerTest {
     @DisplayName("Teste: teste do endpoint '/new'")
     void createNewStory_ReturnStoryWhenSuccessful() {
 
-        BDDMockito.when(storyServiceMock.createStory(StoryPostRequestBodyTesterCreator.createStoryPostRequestBody()))
-                .thenReturn(StoryResponseTesterCreator.convertToStoryResponse(StoryTesterCreator.createStory()));
+        Story story = StoryTesterCreator.createStory(TagTesterCreator.createTagWithId());
 
-        StoryResponse story = storyController.createNewStory(StoryPostRequestBodyTesterCreator.createStoryPostRequestBody())
+        BDDMockito.when(storyServiceMock.createStory(StoryPostRequestBodyTesterCreator.createStoryPostRequestBody()))
+                .thenReturn(StoryResponseTesterCreator.convertToStoryResponse(story));
+
+        StoryResponse storyResponse = storyController.createNewStory(StoryPostRequestBodyTesterCreator.createStoryPostRequestBody())
                 .getBody();
 
-        Assertions.assertThat(story)
+        Assertions.assertThat(storyResponse)
                 .isNotNull()
                 .usingRecursiveComparison()
-                .isEqualTo(StoryTesterCreator.createStory());
+                .isEqualTo(StoryResponseTesterCreator.convertToStoryResponse(story));
 
     }
 
