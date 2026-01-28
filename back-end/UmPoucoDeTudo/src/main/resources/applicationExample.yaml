@@ -28,6 +28,6 @@ spring:
 api:
   security:
     token:
-      # Chave de incriptação (recomendado não usar a chave que já está configurada)
+      # Chave de encriptação (recomendado não usar a chave que já está configurada)
       # Esta chave DEVE estar configurada
       secret: "exemplo"
