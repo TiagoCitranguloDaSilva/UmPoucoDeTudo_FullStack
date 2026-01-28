@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,19 +64,20 @@ public class TagService {
                 .name(requestTag.getName())
                 .user(user)
                 .build();
-        tagRepository.save(tag);
+
+        Tag savedTag = tagRepository.save(tag);
         return new TagResponse(
-                tag.getId(),
-                tag.getName(),
-                tag.getCreated_at(),
-                null,
-                new UserResponse(tag.getUser().getName())
+                savedTag.getId(),
+                savedTag.getName(),
+                savedTag.getCreated_at(),
+                new ArrayList<>(),
+                new UserResponse(savedTag.getUser().getName())
         );
     }
 
     public void replace(TagPutRequestBody requestTag, User user) {
 
-        getByIdReturnTag(requestTag.getId(), user);
+        getById(requestTag.getId(), user);
 
         Tag tag = Tag.builder()
                 .id(requestTag.getId())

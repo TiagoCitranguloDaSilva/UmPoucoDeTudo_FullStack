@@ -1,8 +1,12 @@
 package com.tiago.UmPoucoDeTudo.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.tiago.UmPoucoDeTudo.model.Tag;
+import com.tiago.UmPoucoDeTudo.model.User;
+import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPostRequestBody;
+import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPutRequestBody;
+import com.tiago.UmPoucoDeTudo.responses.TagResponse;
+import com.tiago.UmPoucoDeTudo.service.TagService;
+import com.tiago.UmPoucoDeTudo.util.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,16 +18,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.test.annotation.DirtiesContext;
 
-import com.tiago.UmPoucoDeTudo.model.Tag;
-import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPostRequestBody;
-import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPutRequestBody;
-import com.tiago.UmPoucoDeTudo.service.TagService;
-import com.tiago.UmPoucoDeTudo.util.TagPostRequestBodyTesterCreator;
-import com.tiago.UmPoucoDeTudo.util.TagPutRequestBodyTesterCreator;
-import com.tiago.UmPoucoDeTudo.util.TagTesterCreator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class TagControllerTest {
 
     @InjectMocks
@@ -36,20 +40,22 @@ public class TagControllerTest {
     @DisplayName("Teste: teste do endpoint '/getAll'")
     void getAllTags_ReturnListOfTags_WhenSuccessful() {
 
-        ArrayList<Tag> tagList = new ArrayList<Tag>();
+        ArrayList<Tag> tagList = new ArrayList<>();
 
         tagList.add(TagTesterCreator.createTag());
 
-        BDDMockito.when(tagServiceMock.getAll())
-                .thenReturn(tagList);
+        BDDMockito.when(tagServiceMock.getAll(ArgumentMatchers.any(User.class)))
+                .thenReturn(TagResponseTesterCreator.convertToTagResponse(tagList));
 
-        List<Tag> tags = tagController.getAllTags().getBody();
+        Authentication auth = createAuthentication();
+
+        List<TagResponse> tags = tagController.getAllTags(auth).getBody();
 
         Assertions.assertThat(tags)
                 .isNotNull()
                 .hasSize(1);
 
-        Assertions.assertThat(tags.get(0).getName())
+        Assertions.assertThat(tags.getFirst().getName())
                 .isNotNull()
                 .isNotBlank()
                 .isEqualTo(TagTesterCreator.getDefaultName());
@@ -60,10 +66,12 @@ public class TagControllerTest {
     @DisplayName("Teste: teste do endpoint '/getById/{id}'")
     void getTagById_ReturnTag_WhenSuccessful() {
 
-        BDDMockito.when(tagServiceMock.getById(ArgumentMatchers.anyLong()))
-                .thenReturn(TagTesterCreator.createTagWithId());
+        BDDMockito.when(tagServiceMock.getById(ArgumentMatchers.anyLong(), ArgumentMatchers.any(User.class)))
+                .thenReturn(TagResponseTesterCreator.convertToTagResponse(TagTesterCreator.createTagWithId()));
 
-        Tag tag = tagController.getTagById(TagTesterCreator.getDefaultId()).getBody();
+        Authentication auth = createAuthentication();
+
+        TagResponse tag = tagController.getTagById(TagTesterCreator.getDefaultId(), auth).getBody();
 
         Assertions.assertThat(tag)
                 .isNotNull();
@@ -77,17 +85,18 @@ public class TagControllerTest {
                 .isNotNull()
                 .isEqualTo(TagTesterCreator.getDefaultId());
 
-
     }
 
     @Test
     @DisplayName("Teste: teste do endpoint '/new'")
     void createNewTag_ReturnCreatedTag_WhenSuccessful() {
 
-        BDDMockito.when(tagServiceMock.createTag(ArgumentMatchers.any(TagPostRequestBody.class)))
-                .thenReturn(TagTesterCreator.createTag());
+        BDDMockito.when(tagServiceMock.createTag(ArgumentMatchers.any(TagPostRequestBody.class), ArgumentMatchers.any(User.class)))
+                .thenReturn(TagResponseTesterCreator.convertToTagResponse(TagTesterCreator.createTagWithId()));
 
-        Tag tagSaved = tagController.createNewTag(TagPostRequestBodyTesterCreator.createTagPostRequestBody()).getBody();
+        Authentication auth = createAuthentication();
+
+        TagResponse tagSaved = tagController.createNewTag(TagPostRequestBodyTesterCreator.createTagPostRequestBody(), auth).getBody();
 
         Assertions.assertThat(tagSaved).isNotNull();
         Assertions.assertThat(tagSaved.getName())
@@ -101,12 +110,14 @@ public class TagControllerTest {
     @DisplayName("Teste: teste do endpoint '/update'")
     void updateTag_ReturnNoContent_WhenSuccessful() {
 
-        ResponseEntity<Void> response = tagController.updateTag(TagPutRequestBodyTesterCreator.createTagPutRequestBody());
+        Authentication auth = createAuthentication();
+
+        ResponseEntity<Void> response = tagController.updateTag(TagPutRequestBodyTesterCreator.createTagPutRequestBody(), auth);
 
         Assertions.assertThat(response).isNotNull();
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        BDDMockito.verify(tagServiceMock).replace(ArgumentMatchers.any(TagPutRequestBody.class));
+        BDDMockito.verify(tagServiceMock).replace(ArgumentMatchers.any(TagPutRequestBody.class), ArgumentMatchers.any(User.class));
 
     }
 
@@ -114,10 +125,16 @@ public class TagControllerTest {
     @DisplayName("Teste: teste do endpoint '/delete/{id}'")
     void deleteTag_ReturnVoid_WhenSuccessful() {
 
-        tagController.deleteTag(1L);
+        Authentication auth = createAuthentication();
 
-        BDDMockito.verify(tagServiceMock).deleteTagById(1L);
+        tagController.deleteTag(1L, auth);
 
+        BDDMockito.verify(tagServiceMock).deleteTagById(1L, UserTesterCreator.createUser());
+
+    }
+
+    private Authentication createAuthentication() {
+        return new UsernamePasswordAuthenticationToken(UserTesterCreator.createUser(), null, Collections.emptyList());
     }
 
 }

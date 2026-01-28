@@ -1,8 +1,12 @@
 package com.tiago.UmPoucoDeTudo.util;
 
-import java.time.LocalDate;
-
+import com.tiago.UmPoucoDeTudo.model.Story;
 import com.tiago.UmPoucoDeTudo.model.Tag;
+import com.tiago.UmPoucoDeTudo.model.User;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TagTesterCreator {
 
@@ -11,23 +15,57 @@ public class TagTesterCreator {
     private static final LocalDate DEFAULT_CREATED_AT = LocalDate.now();
 
     public static Tag createTag() {
-        return Tag.builder().name(DEFAULT_NAME).created_at(DEFAULT_CREATED_AT).build();
+
+        return Tag.builder()
+                .name(DEFAULT_NAME)
+                .created_at(DEFAULT_CREATED_AT)
+                .user(UserTesterCreator.createUser())
+                .stories(new ArrayList<>())
+                .build();
     }
 
-    public static Tag createTag(String name) {
-        return Tag.builder().name(name).build();
+    public static Tag createTag(User user) {
+
+        return Tag.builder()
+                .name(DEFAULT_NAME)
+                .created_at(DEFAULT_CREATED_AT)
+                .user(user)
+                .stories(new ArrayList<>())
+                .build();
+    }
+
+    public static Tag createTag(User user, List<Story> story) {
+
+        return Tag.builder()
+                .name(DEFAULT_NAME)
+                .created_at(DEFAULT_CREATED_AT)
+                .user(user)
+                .stories(story)
+                .build();
+    }
+
+    public static Tag createTagWithId(User user, List<Story> story) {
+        return Tag.builder()
+                .id(DEFAULT_ID)
+                .name(DEFAULT_NAME)
+                .created_at(DEFAULT_CREATED_AT)
+                .user(user)
+                .stories(story)
+                .build();
     }
 
     public static Tag createTagWithId() {
-        return Tag.builder().name(DEFAULT_NAME).id(DEFAULT_ID).created_at(DEFAULT_CREATED_AT).build();
+        return Tag.builder()
+                .id(DEFAULT_ID)
+                .name(DEFAULT_NAME)
+                .created_at(DEFAULT_CREATED_AT)
+                .user(UserTesterCreator.createUser())
+                .stories(new ArrayList<>())
+                .build();
     }
 
-    public static Tag createTagWithId(String name, Long id) {
-        return Tag.builder().name(name).id(id).created_at(DEFAULT_CREATED_AT).build();
-    }
-
-    public static Tag createTagWithIdAndDate(String name, Long id, LocalDate date) {
-        return Tag.builder().name(name).id(id).created_at(date).build();
+    public static Tag createTag(String name, User user) {
+        return Tag.builder().name(name).user(user).build();
     }
 
     public static String getDefaultName() {
