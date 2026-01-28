@@ -1,0 +1,33 @@
+#
+# Após configurar este arquivo, troque o nome dele para "application.yaml"
+#
+
+spring:
+  application:
+    name: UmPoucoDeTudo
+
+  # Configuração de conexão com o banco de dados
+  datasource:
+    # Url de conexão do banco Ex: "jdbc:mysql://localhost:3306/UmPoucoDeTudo"
+    url: "jdbc:mysql://localhost:3306/UmPoucoDeTudo"
+
+    # Nome do driver do banco de dados (recomendado não alterar)
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+
+    # Nome do usuário de acesso
+    username: "root"
+
+    # Senha de acesso
+    password:
+
+  # Recomendado não alterar
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+api:
+  security:
+    token:
+      # Chave de incriptação (recomendado não usar a chave que já está configurada)
+      # Esta chave DEVE estar configurada
+      secret: "exemplo"
