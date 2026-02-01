@@ -1,4 +1,4 @@
-package com.tiago.UmPoucoDeTudo.util;
+package com.tiago.UmPoucoDeTudo.util.user;
 
 import com.tiago.UmPoucoDeTudo.model.User;
 

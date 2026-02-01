@@ -1,4 +1,4 @@
-package com.tiago.UmPoucoDeTudo.util;
+package com.tiago.UmPoucoDeTudo.util.story;
 
 import com.tiago.UmPoucoDeTudo.model.Story;
 import com.tiago.UmPoucoDeTudo.responses.StoryResponse;

@@ -1,8 +1,9 @@
-package com.tiago.UmPoucoDeTudo.util;
+package com.tiago.UmPoucoDeTudo.util.tag;
 
 import com.tiago.UmPoucoDeTudo.model.Story;
 import com.tiago.UmPoucoDeTudo.model.Tag;
 import com.tiago.UmPoucoDeTudo.model.User;
+import com.tiago.UmPoucoDeTudo.util.user.UserTesterCreator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

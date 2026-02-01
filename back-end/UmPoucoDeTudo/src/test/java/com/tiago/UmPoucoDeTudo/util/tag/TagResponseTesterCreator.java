@@ -1,8 +1,10 @@
-package com.tiago.UmPoucoDeTudo.util;
+package com.tiago.UmPoucoDeTudo.util.tag;
 
 import com.tiago.UmPoucoDeTudo.model.Story;
 import com.tiago.UmPoucoDeTudo.model.Tag;
 import com.tiago.UmPoucoDeTudo.responses.TagResponse;
+import com.tiago.UmPoucoDeTudo.util.user.UserResponseTesterCreator;
+import com.tiago.UmPoucoDeTudo.util.story.StoryResponseTesterCreator;
 
 import java.util.ArrayList;
 import java.util.List;

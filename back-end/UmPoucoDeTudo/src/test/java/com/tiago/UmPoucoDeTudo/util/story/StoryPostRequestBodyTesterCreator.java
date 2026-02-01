@@ -1,7 +1,8 @@
-package com.tiago.UmPoucoDeTudo.util;
+package com.tiago.UmPoucoDeTudo.util.story;
 
 import com.tiago.UmPoucoDeTudo.model.Tag;
 import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPostRequestBody;
+import com.tiago.UmPoucoDeTudo.util.tag.TagTesterCreator;
 
 public class StoryPostRequestBodyTesterCreator {
 

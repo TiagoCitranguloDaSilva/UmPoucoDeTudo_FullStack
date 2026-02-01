@@ -1,4 +1,4 @@
-package com.tiago.UmPoucoDeTudo.util;
+package com.tiago.UmPoucoDeTudo.util.tag;
 
 import com.tiago.UmPoucoDeTudo.requests.tagRequests.TagPostRequestBody;
 

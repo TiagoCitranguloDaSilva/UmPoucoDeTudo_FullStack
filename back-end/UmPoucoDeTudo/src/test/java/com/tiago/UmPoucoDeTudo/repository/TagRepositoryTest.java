@@ -2,8 +2,8 @@ package com.tiago.UmPoucoDeTudo.repository;
 
 import com.tiago.UmPoucoDeTudo.model.Tag;
 import com.tiago.UmPoucoDeTudo.model.User;
-import com.tiago.UmPoucoDeTudo.util.TagTesterCreator;
-import com.tiago.UmPoucoDeTudo.util.UserTesterCreator;
+import com.tiago.UmPoucoDeTudo.util.tag.TagTesterCreator;
+import com.tiago.UmPoucoDeTudo.util.user.UserTesterCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
