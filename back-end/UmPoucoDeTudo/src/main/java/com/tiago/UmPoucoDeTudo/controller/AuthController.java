@@ -4,7 +4,6 @@ import com.tiago.UmPoucoDeTudo.model.User;
 import com.tiago.UmPoucoDeTudo.repository.UserRepository;
 import com.tiago.UmPoucoDeTudo.requests.AuthRequests.LoginRequest;
 import com.tiago.UmPoucoDeTudo.requests.AuthRequests.RegisterRequest;
-import com.tiago.UmPoucoDeTudo.service.AuthService;
 import com.tiago.UmPoucoDeTudo.service.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
-
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private TokenService tokenService;
