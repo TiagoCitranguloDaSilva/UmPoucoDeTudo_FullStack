@@ -147,6 +147,13 @@ h1 {
     font-size: 1rem;
 }
 
+.headerContainer button:disabled {
+    background-color: #9eaed5;
+    color: #e0e0e0;
+    border: 3px solid #99a5c1;
+    pointer-events: none;
+}
+
 .headerContainer button:hover {
     transform: scale(1.05);
 }
