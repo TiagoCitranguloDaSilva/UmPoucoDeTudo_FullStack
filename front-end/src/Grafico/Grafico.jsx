@@ -59,7 +59,7 @@ function Grafico({ visivel, etiquetas, historias }) {
         } else {
             let achou = false
             for (let c = 0; c < etiquetas.length; c++) {
-                if (historias[etiquetas[c].id]?.length >= 1) {
+                if (etiquetas[c].stories?.length > 0) {
                     achou = true
                 }
             }
@@ -96,7 +96,7 @@ function Grafico({ visivel, etiquetas, historias }) {
             datasets: [
                 {
                     label: "Histórias",
-                    data: novasEtiquetas.map((etiqueta) => historias[etiqueta.id]?.length),
+                    data: novasEtiquetas.map((etiqueta) => etiqueta.stories?.length),
                     backgroundColor: aleatorizarCores(novasEtiquetas.length)
                 }
             ]
