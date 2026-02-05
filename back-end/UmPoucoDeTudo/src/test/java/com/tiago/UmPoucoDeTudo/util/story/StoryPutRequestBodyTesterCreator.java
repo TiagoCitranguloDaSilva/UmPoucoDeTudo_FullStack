@@ -5,28 +5,37 @@ import com.tiago.UmPoucoDeTudo.requests.storyRequests.StoryPutRequestBody;
 import com.tiago.UmPoucoDeTudo.util.tag.TagTesterCreator;
 
 public class StoryPutRequestBodyTesterCreator {
-    
+
     static final String DEFAULT_TITLE = StoryTesterCreator.getDefaultTitle();
     static final String DEFAULT_STORY = StoryTesterCreator.getDefaultStory();
     static final Long DEFAULT_ID = StoryTesterCreator.getDefaultId();
 
 
-    public static StoryPutRequestBody createStoryPutRequestBody(){
+    public static StoryPutRequestBody createStoryPutRequestBody() {
         return StoryPutRequestBody.builder()
                 .id(DEFAULT_ID)
                 .title(DEFAULT_TITLE)
                 .story(DEFAULT_STORY)
                 .tag(TagTesterCreator.createTag())
-            .build();
+                .build();
     }
 
-    public static StoryPutRequestBody createStoryPutRequestBody(Long id, String title, String story, Tag tag){
+    public static StoryPutRequestBody createStoryPutRequestBody(Tag tag) {
+        return StoryPutRequestBody.builder()
+                .id(DEFAULT_ID)
+                .title(DEFAULT_TITLE)
+                .story(DEFAULT_STORY)
+                .tag(tag)
+                .build();
+    }
+
+    public static StoryPutRequestBody createStoryPutRequestBody(Long id, String title, String story, Tag tag) {
         return StoryPutRequestBody.builder()
                 .id(id)
                 .title(title)
                 .story(story)
                 .tag(tag)
-            .build();
+                .build();
     }
 
 }
