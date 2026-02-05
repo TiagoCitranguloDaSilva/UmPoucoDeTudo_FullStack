@@ -31,3 +31,7 @@ api:
       # Chave de encriptação (recomendado não usar a chave que já está configurada)
       # Esta chave DEVE estar configurada
       secret: "exemplo"
+
+server:
+  #  Porta que o servidor irá rodar, mude apenas se necessário
+  port: 8080
