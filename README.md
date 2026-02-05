@@ -3,6 +3,22 @@
 
 O objetivo do projeto é ser um diário, onde o usuário pode escrever suas histórias e catalogá-las por meio de etiquetas personalizáveis, porém não precisa ser usado para contar histórias, o usuário pode usar o software como um bloco de notas também caso queira.
 
+## Sumário
+
+- [Um Pouco De Tudo - Full Stack](#um-pouco-de-tudo---full-stack) 
+- [Versão Front-end](#versão-front-end) 
+- [Como rodar o projeto](#como-rodar-o-projeto)
+  - [Back-end](#back-end) 
+  - [Front-end](#front-end) 
+- [Capturas de tela](#capturas-de-tela) 
+- [Tecnologias utilizadas](#tecnologias-utilizadas) 
+- [Características técnicas](#características-técnicas) 
+  - [Back-end](#back-end-1) 
+  - [Front-end](#front-end-1) 
+- [Diferenciais](#diferenciais) 
+  - [Gráfico](#gráfico) 
+  - [Token de acesso](#token-de-acesso)
+
 ## Versão Front-end
 Este repositório contém apenas a versão full-stack do projeto, no qual todos os dados são salvos em um banco de dados MySQL. Para rodar o projeto é necessário baixá-lo e configurá-lo, caso queira ver apenas a versão front-end, que roda diretamente pelo GitHub Pages, este é o link:
 [Um Pouco De Tudo](https://github.com/TiagoCitranguloDaSilva/UmPoucoDeTudo)
@@ -31,12 +47,14 @@ Agora, descompacte o arquivo e abra-o.
 Nos arquivos do projeto, irá ter 2 pastas, uma chamada "front-end" e outra chamada "back-end", na pasta front-end temos o React e no back-end o Spring Boot. Precisamos rodar o servidor de ambos
 
 ### Back-end
-Para rodar o servidor do back-end (Spring Boot), abra o arquivo `ApplicationExample.yaml` em um editor de arquivos de texto, o arquivo está localizado em `back-end\UmPoucoDeTudo\src\main\resources`e o edite seguindo as instruções:
+O Spring Boot está configurado para permitir o acesso de qualquer fonte, apesar de não ser seguro, está configurado desta forma para facilitar a conexão entre o back-end e o front-end sem que seja necessário que uma pessoa inexperiente necessite alterar os arquivos.
+
+Para rodar o servidor do back-end (Spring Boot), abra o arquivo `ApplicationExample.yaml` em um editor de arquivos de texto, o arquivo está localizado em `back-end\UmPoucoDeTudo\src\main\resources` e o edite seguindo as instruções:
 
 #### Configuração de conexão com o banco de dados
 Na parte `datasource`:
   
-- url: é link de conexão do banco de dados, deve começar com `jdbc:mysql://` e em seguida o link, no final tem que ter o nome do banco. (exemplo: `"jdbc:mysql://localhost:3306/UmPoucoDeTudo"` )(O banco PRECISA já estar criado ao rodar o projeto, o Spring Boot NÃO cria o banco)
+- url: é o link de conexão do banco de dados, deve começar com `jdbc:mysql://` e em seguida o link, no final tem que ter o nome do banco. (exemplo: `"jdbc:mysql://localhost:3306/UmPoucoDeTudo"` )(O banco PRECISA já estar criado ao rodar o projeto, o Spring Boot NÃO cria o banco)
 - driver-class-name: nome do driver do banco de dados (recomendado não alterar)
 - username: nome de usuário para acesso do banco de dados
 - password: senha de acesso do banco de dados
@@ -48,6 +66,9 @@ Na parte `jpa -> hibernate`:
 Na parte `api -> security`:
 
 - token: é a palavra de encriptação para a geração de tokens, os tokens são usados para autenticação de usuário. É NECESSÁRIO colocar um texto neste campo (ex: "segredo", "senha", "palavra". Qualquer tipo de texto funciona).
+
+Na parte `server`:
+- port: é a porta em que o servidor irá rodar, o padrão é 8080, só altere a porta caso seja necessário
 
 Após configurar os campos, renomeie o arquivo para `Application.yaml` e salve-o antes de fechar
 
@@ -74,16 +95,24 @@ O servidor irá iniciar (Mantenha este terminal aberto, pois caso o feche, o ser
 
 Para abrir o navegador, com o terminal do servidor React aberto, digite `Ctrl + o`
 
+## Capturas de tela
+
+![Tela de login](https://github.com/TiagoCitranguloDaSilva/assets/blob/main/UmPoucoDeTudo_FullStack/telaLogin.png)
+![Tela de cadastro](https://github.com/TiagoCitranguloDaSilva/assets/blob/main/UmPoucoDeTudo_FullStack/telaCadastro.png)
+![Tela principal sem dados](https://github.com/TiagoCitranguloDaSilva/assets/blob/main/UmPoucoDeTudo_FullStack/homeVazia.png)
+![Tela principal com dados](https://github.com/TiagoCitranguloDaSilva/assets/blob/main/UmPoucoDeTudo_FullStack/homeComDados.png)
+
 ## Tecnologias utilizadas:
 <div>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" height="40px"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" height="40px"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" height="40px"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" height="40px"/>
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" height="40px"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" height="40px" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" height="40px"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" height="40px"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg" height="40px" />
-          
+
           
 </div>
 Ícones das tecnologias obtidos em:
@@ -108,10 +137,15 @@ O projeto é uma aplicação web stateless, ou seja, o back-end não guarda dado
 <ul>
   <li>React Router para o sistema de rotas</li>
   <li>Fetch para realização das requisições</li>
-  <li>LocalStorage para armazenar o token de validação (o token tem duração de 1 hora)</li>
-  <li>SessionStorage para armazenar mensagens de fim de processo (sucesso ou falha) a serem mostradas em outra tela</li>
   <li>Biblioteca Chart.js para criação do gráfico</li>
 </ul>
 
-## Gráfico
-No canto superior direito da página inicial há um botão que permite ver um gráfico de pizza mostrando a quantidade de histórias em cada etiqueta, para que esse gráfico funcione é necessário ter no mínimo uma etiqueta contendo ao menos uma história.
+## Diferenciais
+
+### Gráfico
+O projeto conta com um gráfico de pizza que permite ver a quantidade de histórias em cada etiqueta, para ver o gráfico, há um botão no canto superior direito, basta clicar nele e o gráfico aparecerá.
+
+Para que o gráfico funcione é necessário ter no mínimo uma etiqueta contendo ao menos uma história, caso contrário, será mostrado uma mensagem dizendo que não há dados o suficiente.
+
+### Token de acesso
+Sendo um projeto stateless, ao fazer login, o back-end retornará um token de acesso que terá validade de 1 hora, este token é armazenado no `LocalStorage` do navegador para que o front-end consiga usá-lo. Não altere este token, pois caso o faça, será necessário fazer login novamente.
